@@ -1,0 +1,23 @@
+window {
+    /* uses system default sans-serif, which at time of writing is DejaVu Sans */
+    /* see fonts.fontconfig.defaultFonts.sansSerif */
+    font-family: sans-serif, 'Font Awesome 6 Free', 'Font Awesome 6 Brands';
+}
+
+window#waybar {
+    background-color: transparent;
+    color: #e2e8f0;
+}
+
+#workspaces {
+    color: #cbd5e1;
+}
+
+#workspaces button.active {
+    color: #e2e8f0;
+}
+
+* {
+    padding: 0;
+    /* margin: 0; */
+}
