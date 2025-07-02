@@ -69,5 +69,10 @@
         };
       });
 
+      nixosModules.default =
+        { ... }:
+        {
+          imports = [ ./core ];
+        };
     };
 }
