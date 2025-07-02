@@ -1,1 +1,0 @@
-Splitting out common core configuration. This may be moved into a public repo eventually so no confidential information!
