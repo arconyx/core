@@ -25,10 +25,10 @@
     {
       self,
       nixpkgs,
-      # home-manager,
-      # lix-module,
+      home-manager,
+      lix-module,
       pre-commit-hooks,
-      # sddm-sugar-candy-nix,
+      sddm-sugar-candy-nix,
       ...
     }:
     let
@@ -38,11 +38,11 @@
         "aarch64-linux"
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      # baseModules = [
-      #   lix-module.nixosModules.default
-      #   sddm-sugar-candy-nix.nixosModules.default
-      #   home-manager.nixosModules.home-manager
-      # ];
+      baseModules = [
+        lix-module.nixosModules.default
+        sddm-sugar-candy-nix.nixosModules.default
+        home-manager.nixosModules.home-manager
+      ];
     in
     {
       checks = forAllSystems (system: {
@@ -72,7 +72,7 @@
       nixosModules.default =
         { ... }:
         {
-          imports = [ ./core ];
+          imports = baseModules ++ [ ./core.nix ];
         };
     };
 }
