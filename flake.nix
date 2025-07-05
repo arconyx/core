@@ -32,7 +32,6 @@
       ...
     }:
     let
-      # revision = self.shortRev or self.dirtyShortRev or self.lastModified or "unknown";
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"

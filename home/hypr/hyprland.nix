@@ -8,24 +8,21 @@
 {
   wayland.windowManager.hyprland =
     let
-      # Define a common prefix for launching applications via uwsm
       launchPrefix = "uwsm app --";
 
-      # Define programs used in your Hyprland config using the launchPrefix
-      # Ensure these packages are available in your system or home.packages
       terminal = "${launchPrefix} ${pkgs.kitty}/bin/kitty";
       fileManager = "${launchPrefix} ${pkgs.nautilus}/bin/nautilus";
+
       rofi = "${launchPrefix} ${pkgs.rofi}/bin/rofi";
-      rofiBluetooth = "${launchPrefix} ${pkgs.rofi-bluetooth}/bin/rofi-bluetooth"; # Assuming rofi-bluetooth package exists
-      rofiPowerMenu = "${rofi} -show powermenu -modi powermenu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"; # Assuming rofi-power-menu package exists
-      rofiSystemd = "${launchPrefix} ${pkgs.rofi-systemd}/bin/rofi-systemd"; # Assuming rofi-systemd package exists
-      # Other utility programs
-      wpctl = "${pkgs.wireplumber}/bin/wpctl"; # wpctl is part of wireplumber/pipewire
+      rofiBluetooth = "${launchPrefix} ${pkgs.rofi-bluetooth}/bin/rofi-bluetooth";
+      rofiPowerMenu = "${rofi} -show powermenu -modi powermenu:${pkgs.rofi-power-menu}/bin/rofi-power-menu";
+      rofiSystemd = "${launchPrefix} ${pkgs.rofi-systemd}/bin/rofi-systemd";
+
+      wpctl = "${pkgs.wireplumber}/bin/wpctl";
       brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
       playerctl = "${pkgs.playerctl}/bin/playerctl";
       hyprshot = "${pkgs.hyprshot}/bin/hyprshot";
-      loginctl = "${pkgs.systemd}/bin/loginctl"; # loginctl is part of systemd
-
+      loginctl = "${pkgs.systemd}/bin/loginctl";
     in
     {
       enable = config.arcworks.home.hypr.enable;
@@ -35,13 +32,11 @@
           "desc:BOE 0x08D6, preferred, auto, 1"
         ];
 
-        # AUTOSTART
         # exec-once is a list of commands to run at startup
         exec-once = lib.optionals osConfig.arcworks.desktop.wallet.kwallet.enable [
           "${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init"
         ];
 
-        # LOOK AND FEEL
         general = {
           gaps_in = 5;
           gaps_out = "15, 0, 15, 15";
@@ -112,7 +107,6 @@
           disable_hyprland_logo = false;
         };
 
-        # INPUT
         input = {
           kb_layout = "us";
           kb_variant = "";
@@ -127,12 +121,11 @@
           numlock_by_default = true;
         };
 
-        # GESTURES
         gestures.workspace_swipe = false;
 
         # KEYBINDINGS
         # Define the main modifier (still needed here for the binds)
-        "$mainMod" = "SUPER"; # Variables in settings need to be strings
+        "$mainMod" = "SUPER";
 
         # bind, bindel, bindl, bindm are lists of strings
         bind = [
@@ -149,7 +142,7 @@
 
           # menu
           "$mainMod, Space, exec, ${rofi} -show drun -run-command '${launchPrefix} {cmd}'"
-          "$mainMod, B, exec, ${rofiBluetooth}" # this crashes hyprland
+          "$mainMod, B, exec, ${rofiBluetooth}"
           "$mainMod ALT, Delete, exec, ${rofiSystemd}"
           "$mainMod, TAB, exec, ${rofi} -show window"
 
@@ -187,7 +180,7 @@
           "$mainMod SHIFT, 9, movetoworkspace, 9"
           "$mainMod SHIFT, 0, movetoworkspace, 10"
 
-          # Example special workspace (scratchpad)
+          # Scratchpad
           "$mainMod, S, togglespecialworkspace, magic"
           "$mainMod SHIFT, S, movetoworkspace, special:magic"
 

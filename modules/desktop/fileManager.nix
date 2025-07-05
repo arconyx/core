@@ -39,6 +39,7 @@
       xdg.terminal-exec = {
         enable = true;
         package = pkgs.xdg-terminal-exec-mkhl;
+        # TODO: Tie this into the kitty module
         settings = {
           Hyprland = [ "kitty.desktop" ];
           default = [ "kitty.desktop" ];

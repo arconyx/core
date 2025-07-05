@@ -8,7 +8,7 @@
       # -S only use events coming from power supplies
       extraArgs = [
         "-s"
-        "-S"
+        # "-S"
       ];
     };
   };

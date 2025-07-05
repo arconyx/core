@@ -41,6 +41,7 @@
     # DBI connect('dbname=/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite','',...) failed: unable to open database file at /run/current-system/sw/bin/command-not-found line 13.
     # cannot open database `/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite' at /run/current-system/sw/bin/command-not-found line 13.
     nix-index.enable = !osConfig.arcworks.server.pi;
+    # TODO: Disable command not found support entirely on systems without nixindex
 
     bash = {
       enable = true;
@@ -48,7 +49,7 @@
       bashrcExtra = ''
         export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
       '';
-      historyControl = [ "ignoredups" ];
+      historyControl = [ "ignoreboth" ];
     };
 
     bat = {

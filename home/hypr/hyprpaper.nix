@@ -17,11 +17,4 @@
       wallpaper = ",~/Pictures/wallpaper.jpg";
     };
   };
-
-  # TODO: Remove after testing
-  # Fixes issue with hyprpaper starting early
-  # See https://github.com/nix-community/home-manager/issues/5899#issuecomment-2498226238
-  # Can be removed once https://github.com/nix-community/home-manager/pull/6253 hits stable
-  # Also affects hypridle and waybar
-  # systemd.user.services.hyprpaper.Unit.After = lib.mkForce "graphical-session.target";
 }

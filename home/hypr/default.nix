@@ -80,7 +80,7 @@
         platformTheme.name = "adwaita";
       };
 
-      xdg.portal.enable = true; # Linked paths in users.nix as requested by option description
+      xdg.portal.enable = true; # Paths have been linked in users.nix as requested by option description
       xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
 
       services.mako = {

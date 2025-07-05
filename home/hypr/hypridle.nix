@@ -59,12 +59,6 @@
         };
       };
 
-      # TODO: Remove after fix verified
-      # Fixes issue with hypridle starting early
-      # See https://github.com/nix-community/home-manager/issues/5899#issuecomment-2498226238
-      # Can be removed once https://github.com/nix-community/home-manager/pull/6253 hits stable
-      # Also affects hyprpaper and waybar
-      # systemd.user.services.hypridle.Unit.After = lib.mkForce "graphical-session.target";
     };
 
 }

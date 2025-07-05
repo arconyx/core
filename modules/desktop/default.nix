@@ -63,7 +63,7 @@
       hardware.graphics.enable = true;
 
       fonts.packages = with pkgs; [
-        font-awesome
+        font-awesome # offload to hyprland config?
         julia-mono
       ];
 
@@ -82,7 +82,7 @@
       time.hardwareClockInLocalTime = cfg.dualBoot;
 
       # for taildrive
-      services.davfs2.enable = true;
+      services.davfs2.enable = config.arcworks.network.tailnet.enable;
 
       # generally useful to have
       # TODO: consider enabling on some servers

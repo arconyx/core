@@ -16,19 +16,14 @@
     lib.mkIf cfg.enable {
       programs.hyprland = {
         enable = true;
-        withUWSM = true; # recommended for most users
-        xwayland.enable = true; # Xwayland can be disabled.
+        withUWSM = true;
+        xwayland.enable = true;
       };
 
       # Needed for hyprlock to use PAM to authenticate
       security.pam.services.hyprlock = { };
 
       environment.systemPackages = with pkgs; [
-        # Enabled in home manager
-        # TODO: Remove after testing
-        # hyprshot
-        # playerctl
-        # brightnessctl
         hyprpolkitagent
         fontconfig
       ];
