@@ -4,5 +4,7 @@
 
   config = {
     services.upower.enable = config.arcworks.desktop.laptop.enable;
+    services.thermald.enable = true;
+    services.tlp.enable = true;
   };
 }
