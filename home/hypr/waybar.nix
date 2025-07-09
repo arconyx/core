@@ -77,7 +77,7 @@
           rotate = 270;
         };
         # TODO: parameterise restic integration
-        "custom/backup_status" = lib.mkIf {
+        "custom/backup_status" = {
           exec = "bash -c 'if systemctl is-failed --quiet restic-backups-backblaze.service; then echo \"{\\\"text\\\": \\\"\\\", \\\"tooltip\\\": \\\"Restic backup failed\\\", \\\"class\\\": \\\"failed\\\"}\"; fi'";
           interval = 10;
           format = "{}";
