@@ -7,7 +7,7 @@
     wayland.enable = true;
     autoNumlock = true;
     sugarCandyNix = {
-      enable = !config.arcworks.desktop.desktopEnvionment.plasma.enable;
+      enable = !config.arcworks.desktop.desktopEnvironment.plasma.enable;
       settings = {
         # Background = set in device files
         ScreenWidth = 1920;
