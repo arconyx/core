@@ -76,7 +76,8 @@
         "hyprland/window" = {
           rotate = 270;
         };
-        "custom/backup_status" = {
+        # TODO: parameterise restic integration
+        "custom/backup_status" = lib.mkIf {
           exec = "bash -c 'if systemctl is-failed --quiet restic-backups-backblaze.service; then echo \"{\\\"text\\\": \\\"\\\", \\\"tooltip\\\": \\\"Restic backup failed\\\", \\\"class\\\": \\\"failed\\\"}\"; fi'";
           interval = 10;
           format = "{}";

@@ -140,6 +140,9 @@
             "/home"
             "/srv"
           ]
+          ++ lib.optionals config.arcworks.services.binaryCache.enable [
+            "/etc/nixstore"
+          ]
           ++ cfg.paths
         );
 

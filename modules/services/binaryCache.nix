@@ -44,7 +44,6 @@
         # WARNING: This will get blown away on reinstall!
         secretKeyFile = "/etc/nixstore/cache-priv-key.pem";
       };
-      arcworks.services.backup.backblaze.paths = lib.optionals cfg.enable [ "/etc/nixstore" ];
 
       # enable using cache on devices that aren't hosting
       nix.settings =
