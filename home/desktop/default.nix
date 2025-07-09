@@ -12,8 +12,8 @@
 
   config = lib.mkIf osConfig.arcworks.desktop.enable {
 
-    home.sessionVariables = {
-      SSH_ASKPASS = lib.mkIf osConfig.arcworks.desktop.wallet.kwallet.enable "ksshaskpass";
+    home.sessionVariables = lib.mkIf lib.mkIf osConfig.arcworks.desktop.wallet.kwallet.enable {
+      SSH_ASKPASS = "ksshaskpass";
       SSH_ASKPASS_REQUIRE = "prefer";
     };
 
