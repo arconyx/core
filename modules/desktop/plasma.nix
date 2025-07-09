@@ -17,7 +17,7 @@
       services.desktopManager.plasma6.enable = true;
 
       # greeter.nix disables our sugar candy theming on Plasma
-      config.arcworks.desktop.greeter.sddm.enable = true;
+      arcworks.desktop.greeter.sddm.enable = true;
 
       environment.systemPackages = with pkgs; [
         clinfo
