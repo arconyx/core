@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -37,8 +36,12 @@
               type = lib.types.nullOr (
                 lib.types.either lib.types.shellPackage (lib.types.passwdEntry lib.types.path)
               );
-              default = pkgs.shadow; # weird but nixpkgs uses it - guess it wraps bash somehow?
-              defaultText = lib.literalExpression "pkgs.shadow";
+              # The upstream default is actually `pkgs.shadow`, which is intended for non-interactive
+              # accounts that cannot be logged into. `users.users.<name>.isNormalUser` sets
+              # `users.users.<name>.useDefaultShell` to true, which overrides it with `users.defaultUserShell`.
+              # This is thus written so that it is only applied when it is non-null, so as
+              # to fall back to `defaultUserShell`.
+              default = null;
               example = lib.literalExpression "pkgs.bashInteractive";
               description = ''
                 The path to the user's shell. Can use shell derivations,
@@ -112,7 +115,7 @@
             extraGroups =
               lib.optionals userCfg.isAdmin [ "wheel" ]
               ++ lib.optionals config.networking.networkmanager.enable [ "networkmanager" ];
-            shell = userCfg.shell;
+            shell = lib.mkIf (userCfg.shell != null) userCfg.shell;
             openssh.authorizedKeys.keys = userCfg.sshKeys;
           }
           userCfg.settings
