@@ -115,7 +115,7 @@
   # cleanup old profiles automatically
   nix.gc = {
     automatic = true;
-    dates = "weekly";
+    frequency = "weekly";
     options = "--delete-older-than 14d"; # TODO: sync everything with system nix-gc?
     # add a little jitter so we don't run at the same time
     # as all the other weekly persistent timers
