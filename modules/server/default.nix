@@ -1,6 +1,9 @@
 { config, lib, ... }:
 {
-  imports = [ ./pi.nix ];
+  imports = [
+    ./minimal.nix
+    ./pi.nix
+  ];
 
   options.arcworks.server = {
     enable = lib.mkEnableOption "server config";
