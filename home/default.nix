@@ -112,6 +112,12 @@
     };
   };
 
+  # cleanup old profiles automatically
+  nix.gc.automatic = true;
+  # add a little jitter so we don't run at the same time
+  # as all the other weekly persistent timers
+  nix.gc.randomizedDelaySec = "45min";
+
   xdg = {
     enable = true;
     userDirs.enable = true;
