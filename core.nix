@@ -38,6 +38,7 @@
         merge.conflictstyle = "zdiff3";
         pull.ff = "only";
       };
+      package = if config.arcworks.server.minimal.enable then pkgs.gitMinimal else pkgs.git;
     };
 
     # default neovim config for editing as root

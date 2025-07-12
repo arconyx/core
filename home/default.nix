@@ -94,6 +94,7 @@
         merge.conflictstyle = "zdiff3";
         pull.ff = "only";
       };
+      package = if osConfig.arcworks.server.minimal.enable then pkgs.gitMinimal else pkgs.git;
     };
 
     ripgrep = {
