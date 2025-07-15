@@ -120,6 +120,8 @@
       backupCfgs = config.arcworks.services.backups.backup;
       isDesktop = config.arcworks.desktop.enable;
       isServer = config.arcworks.server.enable;
+      forEachUser =
+        f: map f (builtins.attrNames (lib.filterAttrs (name: value: value.enable) config.arcworks.users));
     in
     {
       assertions = lib.concatLists (
@@ -180,6 +182,7 @@
             ".gradle" # Eww
             "/home/*/.java" # Eww. Mostly looks like generated font config stuff.
             "node_modules" # Let npm worry about this
+            "/home/*/.m2" # maven local
 
             # Julia is annoying. We only want environments.
             "/home/*/.julia/*" # the trailing wildcard is important because if we exclude .julia/ itself, then the invert won't work
@@ -215,60 +218,72 @@
         };
       }) backupCfgs;
 
-      systemd.services = lib.concatMapAttrs (name: cfg: {
-        "restic-backups-${name}" = {
-          onSuccess = lib.optionals cfg.notifySuccess [ "notify-backup-successful-${name}-desktop.service" ];
-          onFailure =
-            lib.optionals cfg.notifyFailure [ "notify-backup-failed-${name}-desktop.service" ]
-            ++ lib.optionals (cfg.statusWebhook != null) [ "notify-backup-failed-${name}-server.service" ];
+      systemd.services = lib.concatMapAttrs (
+        name: cfg:
+        lib.mkMerge (
+          [
+            {
+              "restic-backups-${name}" = {
+                onSuccess = lib.optionals cfg.notifySuccess [ "notify-backup-successful-${name}-desktop.service" ];
+                onFailure =
+                  lib.optionals cfg.notifyFailure [ "notify-backup-failed-${name}-desktop.service" ]
+                  ++ lib.optionals (cfg.statusWebhook != null) [ "notify-backup-failed-${name}-server.service" ];
 
-          # reduce memory use on pi zeros
-          environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
-        };
+                # reduce memory use on pi zeros
+                environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
+              };
 
-        "notify-backup-successful-${name}-desktop" = lib.mkIf cfg.notifySuccess {
-          enable = true;
-          description = "Notify on successful backup";
-          serviceConfig = {
-            Type = "oneshot";
-            User = config.users.users.arc.name;
-          };
+              "notify-backup-failed-${name}-server" = lib.mkIf (cfg.statusWebhook != null) {
+                enable = true;
+                description = "Notify on failed backup";
+                serviceConfig = {
+                  Type = "oneshot";
+                };
 
-          # required for notify-send
-          environment.DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${builtins.toString config.users.users.arc.uid}/bus";
+                script = ''
+                  ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" ${cfg.statusWebhook}
+                '';
+              };
+            }
+          ]
+          ++ forEachUser (user: {
+            "notify-backup-successful-${name}-desktop-${user}" = lib.mkIf cfg.notifySuccess {
+              enable = true;
+              description = "Notify user ${user} on successful backup";
+              serviceConfig = {
+                Type = "oneshot";
+                User = config.users.users.${user}.name;
+              };
 
-          script = ''
-            ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
-          '';
-        };
+              # required for notify-send
+              environment.DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${
+                builtins.toString config.users.users.${user}.uid
+              }/bus";
 
-        "notify-backup-failed-${name}-desktop" = lib.mkIf cfg.notifyFailure {
-          enable = true;
-          description = "Notify on failed backup";
-          serviceConfig = {
-            Type = "oneshot";
-            User = config.users.users.arc.name;
-          };
+              script = ''
+                ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
+              '';
+            };
 
-          # required for notify-send
-          environment.DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${builtins.toString config.users.users.arc.uid}/bus";
+            "notify-backup-failed-${name}-desktop-${user}" = lib.mkIf cfg.notifyFailure {
+              enable = true;
+              description = "Notify user ${user} on failed backup";
+              serviceConfig = {
+                Type = "oneshot";
+                User = config.users.users.${user}.name;
+              };
 
-          script = ''
-            ${pkgs.libnotify}/bin/notify-send --urgency=critical "Backup failed"
-          '';
-        };
+              # required for notify-send
+              environment.DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${
+                builtins.toString config.users.users.${user}.uid
+              }/bus";
 
-        "notify-backup-failed-${name}-server" = lib.mkIf (cfg.statusWebhook != null) {
-          enable = true;
-          description = "Notify on failed backup";
-          serviceConfig = {
-            Type = "oneshot";
-          };
-
-          script = ''
-            ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" ${cfg.statusWebhook}
-          '';
-        };
-      }) backupCfgs;
+              script = ''
+                ${pkgs.libnotify}/bin/notify-send --urgency=critical "Backup failed"
+              '';
+            };
+          })
+        )
+      ) backupCfgs;
     };
 }
