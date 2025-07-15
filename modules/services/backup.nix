@@ -260,13 +260,8 @@
                 User = config.users.users.${user}.name;
               };
 
-              # required for notify-send
-              environment.DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${
-                builtins.toString config.users.users.${user}.uid
-              }/bus";
-
               script = ''
-                ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
+                DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u ${user})/bus" ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
               '';
             };
 
