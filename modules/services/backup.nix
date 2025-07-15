@@ -157,7 +157,7 @@
           ]
           ++ lib.optionals cfg.server [
             ".config/"
-            ".local/"
+            ".local/share"
           ]
           ++ cfg.exclude
         );
