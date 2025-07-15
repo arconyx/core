@@ -55,7 +55,7 @@
             && (cfg.publicKey != null)
           )
           {
-            substituters = lib.mkAfter [ "http://${cfg.publicAddress}:5000" ];
+            substituters = [ "http://${cfg.publicAddress}:5000" ];
             trusted-public-keys = [
               "${cfg.publicAddress}:${cfg.publicKey}"
             ];
