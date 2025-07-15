@@ -5,100 +5,128 @@
   ...
 }:
 {
-  options.arcworks.services.backup = lib.mkOption {
-    description = "Remote backups with restic";
-    type = lib.types.attrsOf (
-      lib.types.submodule (
-        { ... }:
-        {
-          options = {
-            repository = lib.mkOption {
-              description = "Repository to backup to.";
-              type = lib.types.str;
-              example = "s3:https://bucket-host.example.com/bucket-host";
-            };
+  options.arcworks.services.backups = {
+    global = {
+      paths = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = ''
+          Which paths to backup, for all backup configurations.
+        '';
+        example = [
+          "/var/lib/postgresql"
+          "/home/user/backup"
+        ];
+      };
 
-            passwordFile = lib.mkOption {
-              type = lib.types.str;
-              description = ''
-                Read the repository password from a file.
-              '';
-              example = "/etc/nixos/restic-password";
-            };
+      exclude = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = ''
+          Which patterns to exclude from backup, for all backup configurations.
+        '';
+        example = [
+          "/var/cache"
+          "/home/*/.cache"
+          ".git"
+        ];
+      };
+    };
+    backup = lib.mkOption {
+      description = "Remote backups with restic";
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { ... }:
+          {
+            options = {
+              repository = lib.mkOption {
+                description = "Repository to backup to.";
+                type = lib.types.str;
+                example = "s3:https://bucket-host.example.com/bucket-host";
+              };
 
-            environmentFile = lib.mkOption {
-              type = with lib.types; nullOr str;
-              default = null;
-              description = ''
-                file containing the credentials to access the repository, in the
-                format of an EnvironmentFile as described by {manpage}`systemd.exec(5)`
-              '';
-            };
+              passwordFile = lib.mkOption {
+                type = lib.types.str;
+                description = ''
+                  Read the repository password from a file.
+                '';
+                example = "/etc/nixos/restic-password";
+              };
 
-            desktop = lib.mkOption {
-              description = "Enable desktop backup defaults";
-              type = lib.types.bool;
-              default = config.arcworks.desktop.enable;
-              example = true;
-            };
-            server = lib.mkOption {
-              description = "Enable server backup defaults";
-              type = lib.types.bool;
-              default = config.arcworks.server.enable;
-              example = true;
-            };
+              environmentFile = lib.mkOption {
+                type = with lib.types; nullOr str;
+                default = null;
+                description = ''
+                  file containing the credentials to access the repository, in the
+                  format of an EnvironmentFile as described by {manpage}`systemd.exec(5)`
+                '';
+              };
 
-            statusWebhook = lib.mkOption {
-              type = lib.types.nullOr lib.types.str;
-              default = null;
-              description = "Discord webhook used to report failed backups";
-            };
+              statusWebhook = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = "Discord webhook used to report failed backups";
+              };
 
-            paths = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
-              description = ''
-                Which paths to backup, in addition to the defaults from the server and/or desktop configurations.
-              '';
-              example = [
-                "/var/lib/postgresql"
-                "/home/user/backup"
-              ];
-            };
+              paths = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                default = [ ];
+                description = ''
+                  Which paths to backup for this remote.
+                '';
+                example = [
+                  "/var/lib/postgresql"
+                  "/home/user/backup"
+                ];
+              };
 
-            exclude = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
-              description = ''
-                Which patterns to exclude from backup, in addition to the defaults from the server and/or desktop configurations.
-              '';
-              example = [
-                "/var/cache"
-                "/home/*/.cache"
-                ".git"
-              ];
+              exclude = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                default = [ ];
+                description = ''
+                  Which patterns to exclude from backup for this remote.
+                '';
+                example = [
+                  "/var/cache"
+                  "/home/*/.cache"
+                  ".git"
+                ];
+              };
+
+              notifySuccess = lib.mkOption {
+                type = lib.types.bool;
+                default = config.arcworks.desktop.enable;
+                description = "Notify user on successful backup";
+                example = true;
+              };
+
+              notifyFailure = lib.mkOption {
+                type = lib.types.bool;
+                default = config.arcworks.desktop.enable;
+                description = "Notify user on failed backup";
+                example = true;
+              };
             };
-          };
-        }
-      )
-    );
-    default = { };
+          }
+        )
+      );
+      default = { };
+    };
   };
 
   config =
     let
-      backupCfgs = config.arcworks.services.backup;
+      globalCfg = config.arcworks.services.backups.global;
+      backupCfgs = config.arcworks.services.backups.backup;
+      isDesktop = config.arcworks.desktop.enable;
+      isServer = config.arcworks.server.enable;
     in
     {
       assertions = lib.concatLists (
         lib.mapAttrsToList (name: cfg: [
           {
-            assertion = !cfg.server || (cfg.statusWebhook != null);
+            assertion = !isServer || (cfg.statusWebhook != null);
             message = "arcworks.services.backups.${name}: Server backup requires statusWebhook to be set";
-          }
-          {
-            assertion = cfg.server || cfg.desktop;
-            message = "arcworks.services.backups.${name}: At least one of server or desktop must be enabled";
           }
         ]) backupCfgs
       );
@@ -126,39 +154,43 @@
             "/etc/machine-id"
             "/etc/NetworkManager/system-connections"
             "/etc/passwd"
+            "/etc/shadow"
             "/etc/subgid"
-          ]
-          ++ lib.optionals cfg.desktop [
-            "/home/*/.ssh"
-            "/home/*/Documents"
-            "/home/*/Music"
-            "/home/*/Pictures"
-            "/home/*/Public"
-            "/home/*/Videos"
-            "/home/*/.mozilla/firefox"
-          ]
-          ++ lib.optionals cfg.server [
             "/home"
             "/srv"
           ]
-          ++ lib.optionals config.arcworks.services.binaryCache.enable [
-            "/etc/nixstore"
-          ]
+          ++ globalCfg.paths
           ++ cfg.paths
         );
 
+        # While we can enable include paths based on if modules are active
+        # We want exclusions always active, so that disabling a module
+        # doesn't cause the files to start getting backed up
         exclude = lib.lists.unique (
           [
-            ".cache"
-            ".git"
+            # TODO: Parameterise this a bit more, so e.g. family systems backup ~/Downloads
+            # General
+            "/nix/store" # should never be included, but we'll be safe and explicitly exclude it
+            ".cache" # why would we ever want a cache dir?
+            ".local/share/Trash" # Exclude trash for obvious reasons
+            "/home/*/.icons" # Handled by home manager
+
+            # Dev tools
+            ".git" # this should be obtainable from the remote with minimal loss
+            ".gradle" # Eww
+            "/home/*/.java" # Eww. Mostly looks like generated font config stuff.
+            "node_modules" # Let npm worry about this
+
+            # Julia is annoying. We only want environments.
+            "/home/*/.julia/*" # the trailing wildcard is important because if we exclude .julia/ itself, then the invert won't work
+            "!/home/*/.julia/environments" # inverted with ! to cancel match
+
+            # What is it with programs sticking their crap into ~ instead of following XDG?
+            "/home/*/.nix-defexpr"
+            "/home/*/.nix-profile"
+            # Lix has a flag to follow XDG - we can remove this once arconyx/core#2 is closed and we've migrated
           ]
-          ++ lib.optionals cfg.desktop [
-            "/home/*/.mozilla/firefox/*/storage"
-          ]
-          ++ lib.optionals cfg.server [
-            ".config/"
-            ".local/share"
-          ]
+          ++ globalCfg.exclude
           ++ cfg.exclude
         );
 
@@ -178,23 +210,23 @@
 
         timerConfig = {
           OnCalendar = "daily";
-          Persistent = config.arcworks.desktop.enable;
+          Persistent = isDesktop;
           RandomizedDelaySec = "4hr";
         };
       }) backupCfgs;
 
       systemd.services = lib.concatMapAttrs (name: cfg: {
         "restic-backups-${name}" = {
-          onSuccess = lib.optionals cfg.desktop [ "notify-backup-successful-${name}-desktop.service" ];
+          onSuccess = lib.optionals cfg.notifySuccess [ "notify-backup-successful-${name}-desktop.service" ];
           onFailure =
-            lib.optionals cfg.desktop [ "notify-backup-failed-${name}-desktop.service" ]
-            ++ lib.optionals cfg.server [ "notify-backup-failed-${name}-server.service" ];
+            lib.optionals cfg.notifyFailure [ "notify-backup-failed-${name}-desktop.service" ]
+            ++ lib.optionals (cfg.statusWebhook != null) [ "notify-backup-failed-${name}-server.service" ];
 
           # reduce memory use on pi zeros
           environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
         };
 
-        "notify-backup-successful-${name}-desktop" = lib.mkIf cfg.desktop {
+        "notify-backup-successful-${name}-desktop" = lib.mkIf cfg.notifySuccess {
           enable = true;
           description = "Notify on successful backup";
           serviceConfig = {
@@ -210,7 +242,7 @@
           '';
         };
 
-        "notify-backup-failed-${name}-desktop" = lib.mkIf cfg.desktop {
+        "notify-backup-failed-${name}-desktop" = lib.mkIf cfg.notifyFailure {
           enable = true;
           description = "Notify on failed backup";
           serviceConfig = {
@@ -226,7 +258,7 @@
           '';
         };
 
-        "notify-backup-failed-${name}-server" = lib.mkIf cfg.server {
+        "notify-backup-failed-${name}-server" = lib.mkIf (cfg.statusWebhook != null) {
           enable = true;
           description = "Notify on failed backup";
           serviceConfig = {

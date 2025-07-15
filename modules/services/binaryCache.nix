@@ -45,6 +45,8 @@
         secretKeyFile = "/etc/nixstore/cache-priv-key.pem";
       };
 
+      arcworks.backups.global.paths = lib.optional cfg.enable [ "/etc/nixstore" ];
+
       # enable using cache on devices that aren't hosting
       nix.settings =
         lib.mkIf
