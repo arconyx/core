@@ -218,24 +218,28 @@
         };
       }) backupCfgs;
 
+      systemd.targets = lib.concatMapAttrs (name: cfg: {
+        "restic-backups-${name}-success".enable = true;
+        "restic-backups-${name}-failure".enable = true;
+      }) backupCfgs;
+
       systemd.services = lib.concatMapAttrs (
         name: cfg:
         lib.mkMerge (
           [
             {
               "restic-backups-${name}" = {
-                onSuccess = lib.optionals cfg.notifySuccess [ "notify-backup-successful-${name}-desktop.service" ];
-                onFailure =
-                  lib.optionals cfg.notifyFailure [ "notify-backup-failed-${name}-desktop.service" ]
-                  ++ lib.optionals (cfg.statusWebhook != null) [ "notify-backup-failed-${name}-server.service" ];
+                onSuccess = [ "restic-backups-${name}-success.target" ];
+                onFailure = [ "restic-backups-${name}-failure.target" ];
 
                 # reduce memory use on pi zeros
                 environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
               };
 
-              "notify-backup-failed-${name}-server" = lib.mkIf (cfg.statusWebhook != null) {
+              "notify-backup-${name}-failed-server" = lib.mkIf (cfg.statusWebhook != null) {
                 enable = true;
                 description = "Notify on failed backup";
+                wantedBy = [ "restic-backups-${name}-failure.target" ];
                 serviceConfig = {
                   Type = "oneshot";
                 };
@@ -247,9 +251,10 @@
             }
           ]
           ++ forEachUser (user: {
-            "notify-backup-successful-${name}-desktop-${user}" = lib.mkIf cfg.notifySuccess {
+            "notify-backup-${name}-successful-desktop-${user}" = lib.mkIf cfg.notifySuccess {
               enable = true;
               description = "Notify user ${user} on successful backup";
+              wantedBy = [ "restic-backups-${name}-success.target" ];
               serviceConfig = {
                 Type = "oneshot";
                 User = config.users.users.${user}.name;
@@ -265,9 +270,10 @@
               '';
             };
 
-            "notify-backup-failed-${name}-desktop-${user}" = lib.mkIf cfg.notifyFailure {
+            "notify-backup-${name}-failed-desktop-${user}" = lib.mkIf cfg.notifyFailure {
               enable = true;
               description = "Notify user ${user} on failed backup";
+              wantedBy = [ "restic-backups-${name}-failure.target" ];
               serviceConfig = {
                 Type = "oneshot";
                 User = config.users.users.${user}.name;
