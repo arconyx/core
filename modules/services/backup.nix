@@ -226,7 +226,7 @@
               # reduce memory use on pi zeros
               "restic-backups-${name}" = {
                 environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
-                onFailure = lib.optional (cfg.statusWebhook != null) "notify-backup-${name}-failed-server";
+                onFailure = lib.optional (cfg.statusWebhook != null) "notify-backup-${name}-failed-server.service";
               };
 
               "notify-backup-${name}-failed-server" = lib.mkIf (cfg.statusWebhook != null) {
@@ -245,8 +245,8 @@
           ]
           ++ forEachUser (user: {
             "restic-backups-${name}".onSuccess =
-              lib.optional cfg.notifySuccess "notify-backup-${name}-successful-desktop-${user}"
-              ++ lib.optional cfg.notifyFailure "notify-backup-${name}-failed-desktop-${user}";
+              lib.optional cfg.notifySuccess "notify-backup-${name}-successful-desktop-${user}.service"
+              ++ lib.optional cfg.notifyFailure "notify-backup-${name}-failed-desktop-${user}.service";
 
             # TODO: Have a single script that loops over users?
             "notify-backup-${name}-successful-desktop-${user}" = lib.mkIf cfg.notifySuccess {
