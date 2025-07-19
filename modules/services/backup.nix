@@ -224,11 +224,10 @@
           [
             {
               # reduce memory use on pi zeros
-              "restic-backups-${name}".environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
-
-              "restic-backups-${name}".onFailure = lib.optional (
-                cfg.statusWebhook != null
-              ) "notify-backup-${name}-failed-server";
+              "restic-backups-${name}" = {
+                environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
+                onFailure = lib.optional (cfg.statusWebhook != null) "notify-backup-${name}-failed-server";
+              };
 
               "notify-backup-${name}-failed-server" = lib.mkIf (cfg.statusWebhook != null) {
                 enable = true;
