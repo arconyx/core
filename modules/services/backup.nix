@@ -247,7 +247,7 @@
                 script = ''
                   ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" ${cfg.statusWebhook}
                 '';
-                restartIfChange = false;
+                restartIfChanged = false;
               };
             }
           ]
@@ -267,7 +267,7 @@
                   DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u ${user})/bus" ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
                 fi
               '';
-              restartIfChange = false;
+              restartIfChanged = false;
             };
 
             "notify-backup-${name}-failed-desktop-${user}" = lib.mkIf cfg.notifyFailure {
@@ -284,7 +284,7 @@
                   DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u ${user})/bus" ${pkgs.libnotify}/bin/notify-send --urgency=critical "Backup failed"
                 fi
               '';
-              restartIfChange = false;
+              restartIfChanged = false;
             };
           })
         )
