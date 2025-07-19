@@ -218,23 +218,17 @@
         };
       }) backupCfgs;
 
-      systemd.targets = lib.concatMapAttrs (name: cfg: {
-        "restic-backups-${name}-success".enable = true;
-        "restic-backups-${name}-failure".enable = true;
-      }) backupCfgs;
-
       systemd.services = lib.concatMapAttrs (
         name: cfg:
         lib.mkMerge (
           [
             {
-              "restic-backups-${name}" = {
-                onSuccess = [ "restic-backups-${name}-success.target" ];
-                onFailure = [ "restic-backups-${name}-failure.target" ];
+              # reduce memory use on pi zeros
+              "restic-backups-${name}".environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
 
-                # reduce memory use on pi zeros
-                environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
-              };
+              "restic-backups-${name}".onFailure = lib.optional (
+                cfg.statusWebhook != null
+              ) "notify-backup-${name}-failed-server";
 
               "notify-backup-${name}-failed-server" = lib.mkIf (cfg.statusWebhook != null) {
                 enable = true;
@@ -247,11 +241,14 @@
                 script = ''
                   ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" ${cfg.statusWebhook}
                 '';
-                restartIfChanged = false;
               };
             }
           ]
           ++ forEachUser (user: {
+            "restic-backups-${name}".onSuccess =
+              lib.optional cfg.notifySuccess "notify-backup-${name}-successful-desktop-${user}"
+              ++ lib.optional cfg.notifyFailure "notify-backup-${name}-failed-desktop-${user}";
+
             # TODO: Have a single script that loops over users?
             "notify-backup-${name}-successful-desktop-${user}" = lib.mkIf cfg.notifySuccess {
               enable = true;
@@ -267,7 +264,6 @@
                   DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u ${user})/bus" ${pkgs.libnotify}/bin/notify-send --urgency=low "Backup completed"
                 fi
               '';
-              restartIfChanged = false;
             };
 
             "notify-backup-${name}-failed-desktop-${user}" = lib.mkIf cfg.notifyFailure {
@@ -284,7 +280,6 @@
                   DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u ${user})/bus" ${pkgs.libnotify}/bin/notify-send --urgency=critical "Backup failed"
                 fi
               '';
-              restartIfChanged = false;
             };
           })
         )
