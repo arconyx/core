@@ -244,10 +244,10 @@
             }
           ]
           ++ forEachUser (user: {
-            "restic-backups-${name}".onSuccess =
-              lib.optional cfg.notifySuccess "notify-backup-${name}-successful-desktop-${user}.service";
-            "restic-backups-${name}".onFailure =
-              lib.optional cfg.notifyFailure "notify-backup-${name}-failed-desktop-${user}.service";
+            "restic-backups-${name}" = {
+              onSuccess = lib.optional cfg.notifySuccess "notify-backup-${name}-successful-desktop-${user}.service";
+              onFailure = lib.optional cfg.notifyFailure "notify-backup-${name}-failed-desktop-${user}.service";
+            };
 
             # TODO: Have a single script that loops over users?
             "notify-backup-${name}-successful-desktop-${user}" = lib.mkIf cfg.notifySuccess {
