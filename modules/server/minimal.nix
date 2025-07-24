@@ -22,6 +22,7 @@
       enable = true;
       doc.enable = false;
       info.enable = false; # also part of perlless
+      nixos.includeAllModules = lib.mkForce false; # rebuilds on every change and we don't need it that badly on a server
     };
     environment.defaultPackages = [ ];
     environment.systemPackages = [
