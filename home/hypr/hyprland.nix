@@ -8,7 +8,7 @@
 {
   wayland.windowManager.hyprland =
     let
-      launchPrefix = "uwsm app --";
+      launchPrefix = "${pkgs.uwsm}/bin/uwsm app --";
 
       terminal = "${launchPrefix} ${pkgs.kitty}/bin/kitty";
       fileManager = "${launchPrefix} ${pkgs.nautilus}/bin/nautilus";
