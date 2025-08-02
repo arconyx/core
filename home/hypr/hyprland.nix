@@ -131,7 +131,7 @@
         bind = [
           "$mainMod, Q, exec, ${terminal}"
           "$mainMod, E, exec, ${fileManager}"
-          ", XF86Calculator, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
+          # ", XF86Calculator, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
 
           "$mainMod, C, killactive,"
           "$mainMod, M, exit,"
