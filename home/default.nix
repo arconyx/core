@@ -12,12 +12,14 @@
     ./hypr
 
     ./helix.nix
+    ./jj
     ./julia.nix
     ./neovim.nix
   ];
 
   arcworks.neovim.enable = false;
   arcworks.helix.enable = true;
+  arcworks.jujutsu.enable = true;
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
