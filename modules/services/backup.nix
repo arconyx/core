@@ -202,6 +202,8 @@
           "--skip-if-unchanged"
           "--verbose"
           "--no-scan"
+          "--exclude-if-present .nobackup"
+          # "--exclude-larger-than 1G"
         ];
 
         pruneOpts = [
