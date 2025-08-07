@@ -12,7 +12,7 @@
       enable = true;
       defaultEditor = true;
       settings = {
-        theme = "monokai_pro";
+        theme = "monokai_soda";
         editor = {
           line-number = "relative";
         };
