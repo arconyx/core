@@ -258,7 +258,7 @@
                     webhookUrl = if cfg.statusWebhook != null then cfg.statusWebhook else "$WEBHOOK_URL";
                   in
                   ''
-                    ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" '${webhookUrl}'
+                    ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" "${webhookUrl}"
                   '';
               };
             }
