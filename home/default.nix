@@ -1,6 +1,8 @@
 # Imported for each user in core/users.nix
 # Some options are only disabled on the pis, to keep them minimal
 
+# TODO: Divide this so arc stuff isn't in with stuff for every user
+
 {
   osConfig,
   pkgs,
@@ -17,9 +19,7 @@
     ./neovim.nix
   ];
 
-  arcworks.neovim.enable = false;
   arcworks.helix.enable = true;
-  arcworks.jujutsu.enable = true;
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [

@@ -16,4 +16,8 @@
       ];
     };
   };
+
+  home-manager.users.arc = {
+    arcworks.jujutsu.enable = true;
+  };
 }
