@@ -7,10 +7,6 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,7 +22,6 @@
       self,
       nixpkgs,
       home-manager,
-      lix-module,
       pre-commit-hooks,
       sddm-sugar-candy-nix,
       ...
@@ -38,7 +33,6 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       baseModules = [
-        lix-module.nixosModules.default
         sddm-sugar-candy-nix.nixosModules.default
         home-manager.nixosModules.home-manager
       ];
