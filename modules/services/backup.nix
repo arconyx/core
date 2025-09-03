@@ -99,6 +99,8 @@
                 ];
               };
 
+              prune = lib.mkEnableOption "Enable repository pruning";
+
               notifySuccess = lib.mkOption {
                 type = lib.types.bool;
                 default = config.arcworks.desktop.enable;
@@ -216,7 +218,12 @@
           # "--exclude-larger-than 1G"
         ];
 
-        pruneOpts = [
+        checkOpts = [
+          "--with-cache"
+          "--read-data-subset=1%"
+        ];
+
+        pruneOpts = lib.optionals cfg.prune [
           "--keep-daily 7"
           "--keep-weekly 3"
           "--keep-monthly 6"
