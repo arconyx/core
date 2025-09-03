@@ -99,7 +99,12 @@
                 ];
               };
 
-              prune = lib.mkEnableOption "Enable repository pruning";
+              prune = lib.mkOption {
+                type = lib.types.bool;
+                default = true;
+                description = "Enable repository pruning";
+                example = false;
+              };
 
               notifySuccess = lib.mkOption {
                 type = lib.types.bool;
