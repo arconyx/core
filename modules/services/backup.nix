@@ -233,6 +233,7 @@
           "--keep-weekly 3"
           "--keep-monthly 6"
           "--keep-yearly 3"
+          "--group-by host"
         ];
 
         timerConfig = {
