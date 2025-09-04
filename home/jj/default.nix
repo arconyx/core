@@ -1,18 +1,10 @@
 {
   lib,
   config,
-  osConfig,
   ...
 }:
 {
-  options.arcworks.jujutsu.enable = lib.mkOption {
-    type = lib.types.bool;
-    # Should probably change this when I drag it into core
-    # Just enable it in the default user config
-    default = osConfig.arcworks.desktop.enable;
-    example = true;
-    description = "Enable jujutsu and related configuration";
-  };
+  options.arcworks.jujutsu.enable = lib.mkEnableOption "Enable jujutsu and related configuration";
 
   config = lib.mkIf config.arcworks.jujutsu.enable {
     programs.jujutsu = {
