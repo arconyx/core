@@ -42,7 +42,7 @@
     # Avoid following error when running commands that don't exist:
     # DBI connect('dbname=/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite','',...) failed: unable to open database file at /run/current-system/sw/bin/command-not-found line 13.
     # cannot open database `/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite' at /run/current-system/sw/bin/command-not-found line 13.
-    nix-index.enable = !osConfig.arcworks.server.pi;
+    # nix-index.enable = !osConfig.arcworks.server.pi;
     # TODO: Disable command not found support entirely on systems without nixindex
 
     bash = {
