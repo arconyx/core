@@ -35,7 +35,6 @@
   };
 
   programs = {
-    direnv.enable = true;
     fd.enable = true;
     home-manager.enable = true; # Let home Manager install and manage itself.
 
@@ -59,6 +58,11 @@
       extraPackages = with pkgs.bat-extras; [
         batman
       ];
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
     };
 
     eza = {
