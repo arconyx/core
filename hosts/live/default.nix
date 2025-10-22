@@ -1,4 +1,6 @@
 # Build with nix build then dd it to the device
+# ALSO BE VERY CAREFUL ABOUT WHAT DEVICE YOU USE DD ON!
+# cp without sudo may be safer in not accidentally overwriting your harddrive https://distrowatch.com/weekly.php?issue=20240122#qa
 # Wiki has some testing suggestions https://wiki.nixos.org/wiki/Creating_a_NixOS_live_CD
 # Test it with qemu-system-x86_64 -enable-kvm -m 4096M -cdrom /result/iso/name.iso
 {
