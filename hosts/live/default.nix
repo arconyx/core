@@ -30,8 +30,8 @@
       userEmail = "11323309+arconyx@users.noreply.github.com";
     };
     arcworks.home.hypr = {
-      hypridle = false;
-      hyprlock = false;
+      hypridle.enable = false;
+      hyprlock.enable = false;
     };
   };
 
