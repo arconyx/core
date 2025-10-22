@@ -6,5 +6,6 @@
     services.upower.enable = true;
     services.thermald.enable = true;
     services.tlp.enable = true;
+    networking.networkmanager.wifi.powersave = true;
   };
 }
