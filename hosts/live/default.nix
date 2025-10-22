@@ -29,6 +29,10 @@
       userName = "ArcOnyx";
       userEmail = "11323309+arconyx@users.noreply.github.com";
     };
+    arcworks.home.hypr = {
+      hypridle = false;
+      hyprlock = false;
+    };
   };
 
   services.displayManager.sddm.sugarCandyNix.settings.Background =
