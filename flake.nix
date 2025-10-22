@@ -27,6 +27,11 @@
       ...
     }:
     let
+      # We really shouldn't use special args for this
+      # We could just calculate it from inputs.self or pass a module option up to here,
+      # maybe as a nixosSystem wrapper.
+      revision = self.shortRev or self.dirtyShortRev or self.lastModified or "unknown";
+
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -67,5 +72,12 @@
         {
           imports = baseModules ++ [ ./core.nix ];
         };
+
+      packages.x86_64-linux.default = self.nixosConfigurations.live.config.system.build.isoImage;
+
+      nixosConfigurations.live = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit revision; };
+        modules = baseModules ++ [ ./hosts/live ];
+      };
     };
 }
