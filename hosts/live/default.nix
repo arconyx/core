@@ -1,3 +1,6 @@
+# Build with nix build then dd it to the device
+# Wiki has some testing suggestions https://wiki.nixos.org/wiki/Creating_a_NixOS_live_CD
+# Test it with qemu-system-x86_64 -enable-kvm -m 4096M -cdrom /result/iso/name.iso
 {
   pkgs,
   lib,
@@ -33,6 +36,7 @@
 
   # Default profile setups a nixos user, which we're leaving enabled
   # but not using, in favour of arc.
+  services.getty.autologinUser = lib.mkForce "arc";
 
   # Allow the user to log in as arc without a password.
   users.users.arc.initialHashedPassword = "";
@@ -57,4 +61,6 @@
   ];
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
+
+  networking.hostName = "live";
 }
