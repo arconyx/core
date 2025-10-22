@@ -64,6 +64,9 @@
     restic
   ];
 
+  # Otherwise the installer complains about missing config
+  environment.pathsToLink = [ "/share/calamares" ];
+
   nixpkgs.hostPlatform.system = "x86_64-linux";
 
   networking.hostName = "live";
