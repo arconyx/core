@@ -43,5 +43,6 @@
 
   # Generate documentation including all module options
   # Accessible with `man configuration.nix` or `nixos-help` (html)
-  documentation.nixos.includeAllModules = true;
+  # Had rebuild time impacts
+  # documentation.nixos.includeAllModules = true;
 }
