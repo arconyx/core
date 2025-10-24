@@ -26,7 +26,7 @@
           "custom/backup_status"
           "tray"
           "pulseaudio"
-          "network"
+          # "network"
           "network#tailscale"
           "upower"
         ];
