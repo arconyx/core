@@ -14,6 +14,54 @@
           name = config.programs.git.userName;
           email = config.programs.git.userEmail;
         };
+        aliases.tug = [
+          "bookmark"
+          "move"
+          "--from"
+          "closest_bookmark(@-)"
+          "--to"
+          "@-"
+        ];
+        templates.log = "log_oneline";
+        template-aliases = {
+          log_oneline = "log_oneline(self)";
+          "log_oneline(commit)" = ''
+            if(
+              commit.root(),
+              format_root_commit(commit),
+              label(
+                separate(" ",
+                  if(commit.current_working_copy(), "working_copy"),
+                  if(commit.immutable(), "immutable", "mutable"),
+                  if(commit.conflict(), "conflicted")
+                ),
+                concat(
+                  separate(" ",
+                    format_short_change_id_with_hidden_and_divergent_info(commit),
+                    if(!commit.mine(), format_short_signature_oneline(commit.author())),
+                    truncate_end(5, commit_timestamp(commit).ago()),
+                    commit.bookmarks(),
+                    commit.tags(),
+                    commit.working_copies(),
+                    if(commit.git_head(), label("git_head", "git_head()")),
+                    
+                    if(commit.conflict(), label("conflict", "conflict")),
+                    if(config("ui.show-cryptographic-signatures").as_boolean(),
+                      format_short_cryptographic_signature(commit.signature())),
+                    if(commit.empty(), label("empty", "(empty)")),
+                    if(commit.description(),
+                      commit.description().first_line(),
+                      label(if(commit.empty(), "empty"), description_placeholder),
+                    ),
+                    if(commit.description().lines().len() > 1,
+                      "◁"
+                    ),
+                  ) ++ "\n",
+                ),
+              )
+            )
+          '';
+        };
       };
     };
 
