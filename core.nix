@@ -63,7 +63,7 @@
 
     nh = {
       enable = !config.arcworks.server.minimal.enable;
-      flake = "/etc/nixos";
+      flake = "/config";
     };
   };
 
