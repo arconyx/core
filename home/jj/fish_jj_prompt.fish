@@ -24,19 +24,18 @@ jj log --ignore-working-copy --no-graph --color always -r @ -T '
                     "\"",
                     "\"",
                     if(
-                        description.first_line().substr(0, 24).starts_with(description.first_line()),
-                        description.first_line().substr(0, 24),
-                        description.first_line().substr(0, 23) ++ "…"
+                        description.first_line().substr(0, 16).starts_with(description.first_line()),
+                        description.first_line().substr(0, 16),
+                        description.first_line().substr(0, 15) ++ "…"
                     )
                 ),
-                label(if(empty, "empty"), description_placeholder)
+                label(if(empty, "empty"), "?")
             ),
             change_id.shortest(),
-            commit_id.shortest(),
-            if(conflict, label("conflict", "(conflict)")),
-            if(empty, label("empty", "(empty)")),
-            if(divergent, "(divergent)"),
-            if(hidden, "(hidden)"),
+            if(conflict, label("conflict", "(!)")),
+            if(empty, label("empty", "(e)")),
+            if(divergent, "(⑂)"),
+            if(hidden, "(h)"),
         )
     )
 '
