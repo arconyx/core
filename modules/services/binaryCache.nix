@@ -57,7 +57,7 @@
             && (cfg.publicKey != null)
           )
           {
-            substituters = [ "http://${cfg.publicAddress}:5000" ];
+            trusted-substituters = [ "http://${cfg.publicAddress}:5000" ];
             trusted-public-keys = [
               "${cfg.publicAddress}:${cfg.publicKey}"
             ];
