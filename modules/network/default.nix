@@ -1,6 +1,9 @@
 { config, ... }:
 {
-  imports = [ ./tailnet.nix ];
+  imports = [
+    ./tailnet.nix
+    ./slow.nix
+  ];
 
   # Firewall is enabled by default but we'll be explicit
   networking.firewall.enable = true;
