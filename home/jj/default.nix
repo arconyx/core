@@ -22,9 +22,7 @@
           "--to"
           "@-"
         ];
-        revset-aliases = [
-          "'closest_bookmark(to)' = 'heads(::to & bookmarks())'"
-        ];
+        revset-aliases."closest_bookmark(to)" = "heads(::to & bookmarks())";
         templates.log = "log_oneline";
         template-aliases = {
           log_oneline = "log_oneline(self)";
