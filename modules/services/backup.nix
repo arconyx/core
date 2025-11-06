@@ -102,7 +102,14 @@
               prune = lib.mkOption {
                 type = lib.types.bool;
                 default = true;
-                description = "Enable repository pruning";
+                description = "Enable repository pruning. This locks the repository while running.";
+                example = false;
+              };
+
+              check = lib.mkOption {
+                type = lib.types.bool;
+                default = true;
+                description = "Enable repository checking. This locks the repository while running.";
                 example = false;
               };
 
@@ -223,7 +230,7 @@
           # "--exclude-larger-than 1G"
         ];
 
-        checkOpts = [
+        checkOpts = lib.optionals cfg.check [
           "--with-cache"
           "--read-data-subset=1%"
         ];
