@@ -57,7 +57,7 @@
                       label(if(commit.empty(), "empty"), description_placeholder),
                     ),
                     if(commit.description().lines().len() > 1,
-                      "◁"
+                      "◀"
                     ),
                   ) ++ "\n",
                 ),
