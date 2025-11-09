@@ -16,13 +16,16 @@
       }
     ];
 
+    nix.registry = lib.mkForce { };
+
     # strip down the system
     # based on the nixpkgs minimal profile for nixos until marked otherwise
     documentation = {
       enable = true;
       doc.enable = false;
       info.enable = false; # also part of perlless
-      nixos.includeAllModules = lib.mkForce false; # rebuilds on every change and we don't need it that badly on a server
+      nixos.enable = false;
+      documentation.man.generateCaches = false;
     };
     environment.defaultPackages = [ ];
     environment.systemPackages = [
