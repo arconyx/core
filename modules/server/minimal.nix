@@ -25,7 +25,7 @@
       doc.enable = false;
       info.enable = false; # also part of perlless
       nixos.enable = false;
-      documentation.man.generateCaches = false;
+      man.generateCaches = false;
     };
     environment.defaultPackages = [ ];
     environment.systemPackages = [
