@@ -32,6 +32,19 @@
     # - [Lix Docs](https://docs.lix.systems/manual/lix/stable/command-ref/opt-common.html)
     fallback = !config.arcworks.server.pi;
     trusted-users = [ "@wheel" ];
+
+    # Flox for cuda
+    # Which we might also get through nix community, but hey
+    # > With extra-substituters, Nix always checks cache.nixos.org first, and only uses Flox’s cache for packages not found upstream.
+    # - https://discourse.nixos.org/t/nix-flox-nvidia-opening-up-cuda-redistribution-on-nix/69189
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.flox.dev"
+    ];
+    trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+    ];
   };
 
   # Perform garbage collection to maintain low disk usage
