@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 {
   # Use Lix
-  nix.package = pkgs.lixPackageSets.stable.lix;
+  nix.package = pkgs.lixPackageSets.latest.lix;
   nixpkgs.overlays = [
     (final: prev: {
       inherit (prev.lixPackageSets.stable)
