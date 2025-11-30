@@ -45,7 +45,9 @@
 
       programs.rofi = {
         enable = true;
-        package = pkgs.rofi-wayland;
+        package = pkgs.rofi.override (prev: {
+          rofi-unwrapped = prev.rofi-unwrapped.override { x11Support = false; };
+        });
         plugins = with pkgs; [
           rofi-bluetooth
           # rofi-calc

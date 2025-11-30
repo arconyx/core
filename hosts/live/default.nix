@@ -16,6 +16,7 @@
   ];
 
   arcworks.desktop.enable = true;
+  arcworks.desktop.greeter.sddm.background = ./assets/alena-aenami-lights-1k.jpg;
 
   documentation = {
     doc.enable = true;
@@ -27,18 +28,15 @@
 
   home-manager.users.arc = {
     home.file."Pictures/wallpaper.jpg".source = ./assets/alena-aenami-lights-1k.jpg;
-    programs.git = {
-      userName = "ArcOnyx";
-      userEmail = "11323309+arconyx@users.noreply.github.com";
+    programs.git.settings.user = {
+      name = "ArcOnyx";
+      email = "11323309+arconyx@users.noreply.github.com";
     };
     arcworks.home.hypr = {
       hypridle.enable = false;
       hyprlock.enable = false;
     };
   };
-
-  services.displayManager.sddm.sugarCandyNix.settings.Background =
-    lib.cleanSource ./assets/alena-aenami-lights-1k.jpg;
 
   # Default profile setups a nixos user, which we're leaving enabled
   # but not using, in favour of arc.

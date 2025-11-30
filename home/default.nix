@@ -60,6 +60,12 @@
       ];
     };
 
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+      options.navigate = true;
+    };
+
     direnv = {
       enable = true;
       nix-direnv.enable = true;
@@ -86,15 +92,11 @@
 
     git = {
       enable = true;
-      delta = {
-        enable = true;
-        options.navigate = true;
-      };
       ignores = [
         ".direnv/"
         ".envrc"
       ];
-      extraConfig = {
+      settings = {
         safe.directory = "/config/*";
         init.defaultBranch = "main";
         merge.conflictstyle = "zdiff3";
@@ -113,15 +115,19 @@
 
     ssh = {
       enable = true;
-      addKeysToAgent = "yes";
-      hashKnownHosts = true;
+      matchBlocks."*" = {
+        hashKnownHosts = true;
+        addKeysToAgent = "yes";
+      };
+      enableDefaultConfig = false;
     };
   };
 
   # cleanup old profiles automatically
   nix.gc = {
     automatic = true;
-    frequency = "weekly";
+    dates = "weekly";
+    persistent = true;
     options = "--delete-older-than 14d"; # TODO: sync everything with system nix-gc?
     # add a little jitter so we don't run at the same time
     # as all the other weekly persistent timers

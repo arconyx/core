@@ -2,17 +2,13 @@
   description = "NixOS logic ";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sddm-sugar-candy-nix = {
-      url = "github:Zhaith-Izaliel/sddm-sugar-candy-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -23,7 +19,6 @@
       nixpkgs,
       home-manager,
       pre-commit-hooks,
-      sddm-sugar-candy-nix,
       ...
     }:
     let
@@ -38,7 +33,6 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       baseModules = [
-        sddm-sugar-candy-nix.nixosModules.default
         home-manager.nixosModules.home-manager
       ];
     in

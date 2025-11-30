@@ -121,7 +121,9 @@
           numlock_by_default = true;
         };
 
-        gestures.workspace_swipe = false;
+        gesture = [
+          "3, horizontal, workspace"
+        ];
 
         # KEYBINDINGS
         # Define the main modifier (still needed here for the binds)
