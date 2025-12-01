@@ -92,5 +92,20 @@
       programs = {
         nix-ld.enable = true;
       };
+
+      # TODO: Unstable has a change incoming that will automatically
+      # refresh roots when direnv loads a directory
+      services.angrr = {
+        enable = true;
+        enableNixGcIntegration = true;
+        period = "2months";
+        extraArgs = [
+          "--ignore-directories-in-home"
+          ".local/state/nix/profiles"
+          "--ignore-directories-in-home"
+          ".local/state/home-manager/gcroots"
+        ];
+      };
+
     };
 }
