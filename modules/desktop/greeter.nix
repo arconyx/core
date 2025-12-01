@@ -39,7 +39,10 @@
             pkgs.sddm-astronaut
           else
             (pkgs.sddm-astronaut.override {
-              themeConfig.background = builtins.toString cfg.background;
+              themeConfig = {
+                background = builtins.toString cfg.background;
+                PartialBlur = false;
+              };
             })
         )
       ];
