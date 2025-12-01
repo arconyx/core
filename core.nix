@@ -15,9 +15,10 @@
     ./nix.nix
   ];
 
+  boot.tmp.cleanOnBoot = true;
+
   # Select internationalisation properties.
   i18n.defaultLocale = "en_NZ.UTF-8";
-
   time.timeZone = "Pacific/Auckland";
 
   # Link Local Name Resolution for LAN DNS
