@@ -25,5 +25,11 @@
     ];
 
     programs.firefox.enable = true; # TODO: move custom config for tab bar and stuff into here
+
+    # use services.tailscale.extraSetFlags = [ "--operator=arc" ]; at nixos level
+    # to enable full functionality
+    # we aren't hard coding it because the intended user may not be arc
+    # https://tailscale.com/kb/1023/troubleshooting#operator-permission
+    services.tailscale-systray.enable = osConfig.arcworks.network.tailnet.enable;
   };
 }

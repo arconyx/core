@@ -26,8 +26,6 @@
           "custom/backup_status"
           "tray"
           "pulseaudio"
-          # "network"
-          "network#tailscale"
           "upower"
         ];
         tray = {
@@ -36,20 +34,6 @@
         clock = {
           format = "{:%H\n%M}";
           tooltip-format = "<big>{:%A %d %B %Y}</big>\n<tt><small>{calendar}</small></tt>";
-        };
-        network = {
-          format-wifi = "";
-          format-ethernet = "";
-          tooltip-format = "{ifname}: {ipaddr}/{cidr}";
-          format-linked = "";
-          format-disconnected = "⚠";
-        };
-        "network#tailscale" = {
-          interface = "tailscale*";
-          format-ethernet = "";
-          tooltip-format = "{ifname}: {ipaddr}/{cidr}";
-          format-linked = "";
-          format-disconnected = "⚠";
         };
         pulseaudio = {
           format = "{icon}";
