@@ -25,6 +25,7 @@
   home.packages = with pkgs; [
     curlie
     dysk
+    dust
   ];
 
   # Only for generic aliases compatible across shells
