@@ -29,7 +29,7 @@
       networking.networkmanager.enable = !cfg.pi;
 
       # runtime watchdog
-      systemd.watchdog.runtimeTime = if cfg.pi then "15s" else "30s";
+      systemd.settings.Manager.RuntimeWatchdogSec = if cfg.pi then "15s" else "30s";
 
       # help maintain connections
       systemd.services.tailscaled.restartIfChanged = false;
