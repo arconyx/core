@@ -36,8 +36,8 @@ in
           ${pkgs.coreutils}/bin/sleep ${rollback-delay}
           ${pkgs.util-linux}/bin/wall "Rolling back to $(readlink ${rollback-profile-path})"
           echo "Rolling back to $(readlink ${rollback-profile-path})"
-          ${pkgs.nix}/bin/nix-env --profile /nix/var/nix/profiles/system --set $(readlink ${rollback-profile-path})
-          $(readlink ${rollback-profile-path})/bin/switch-to-configuration boot
+          ${pkgs.nix}/bin/nix-env --profile /nix/var/nix/profiles/system --set "$(readlink ${rollback-profile-path})"
+          "$(readlink ${rollback-profile-path})/bin/switch-to-configuration" boot
           rm ${rollback-profile-path}
           ${pkgs.systemd}/bin/shutdown -r now
         fi
