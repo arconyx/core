@@ -3,6 +3,7 @@
   imports = [
     ./minimal.nix
     ./pi.nix
+    ./switch-fix.nix
   ];
 
   options.arcworks.server = {
