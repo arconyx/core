@@ -19,6 +19,7 @@
       type = lib.types.nullOr lib.types.bool;
       default = null;
     };
+    cuda.enable = lib.mkEnableOption "CUDA enabled builds";
   };
 
   config =
@@ -33,8 +34,8 @@
         }
       ];
 
-      nixpkgs.config.cudaSupport = true;
-      nix.settings = {
+      nixpkgs.config.cudaSupport = cfg.cuda.enable;
+      nix.settings = lib.mkIf cfg.cuda.enable {
         substituters = [
           "https://cache.nixos-cuda.org?priority=60"
         ];
