@@ -21,7 +21,7 @@
 
       environment.systemPackages = with pkgs; [
         clinfo
-        glxinfo
+        mesa-demos
         wayland-utils
         vulkan-tools
       ];
