@@ -107,6 +107,14 @@
           disable_hyprland_logo = false;
         };
 
+        render = {
+          # Render output from fullscreen window directly without composition
+          # Faster but may causes glitches
+          # 0 = off; 1 = on; 2 = on if content type == game
+          # testing shows content type is often unset so we don't use 2
+          direct_scanout = 1;
+        };
+
         input = {
           kb_layout = "us";
           kb_variant = "";
