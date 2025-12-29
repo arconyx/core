@@ -63,6 +63,7 @@
             )
           '';
         };
+        git.private-commits = "description(glob:'wip:*') | description(glob:'private:*') | description(glob:'broken:*')";
       };
     };
 
