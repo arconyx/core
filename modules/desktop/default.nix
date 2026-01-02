@@ -91,6 +91,10 @@
 
       programs = {
         nix-ld.enable = true;
+        appimage = {
+          enable = true;
+          binfmt = true;
+        };
       };
 
       # TODO: Unstable has a change incoming that will automatically
