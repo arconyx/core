@@ -90,7 +90,6 @@
       services.fwupd.enable = true;
 
       programs = {
-        nix-ld.enable = true;
         appimage = {
           enable = true;
           binfmt = true;
