@@ -30,7 +30,7 @@
 
   # Only for generic aliases compatible across shells
   home.shellAliases = {
-    download = "curlie -sSfLO"; # download silently, but fail and print error if we get an http error
+    download = "curlie -sSfLO --no-clobber"; # download silently, but fail and print error if we get an http error
     # masking standard commands
     cat = "bat";
   };
