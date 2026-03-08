@@ -270,7 +270,7 @@
                 environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
 
                 onFailure = lib.optional statusWebookEnabled "notify-backup-${name}-failed-server.service";
-                onSuccess = lib.optional "notify-backup-${name}-successful-webhook.service";
+                onSuccess = lib.optional uptimeWebookEnabled "notify-backup-${name}-success-server.service";
               };
 
               "notify-backup-${name}-failed-server" = lib.mkIf statusWebookEnabled {
