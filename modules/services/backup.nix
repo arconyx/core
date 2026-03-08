@@ -68,10 +68,16 @@
                 description = "Discord webhook used to report failed backups";
               };
 
+              uptimeWebhook = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = "Webhook used to report successful backups, such as used by healthchecks.io or Uptime Kuma.";
+              };
+
               statusEnvFile = lib.mkOption {
                 type = lib.types.nullOr lib.types.path;
                 default = null;
-                description = "Environment file containing Discord webhook as `WEBHOOK_URL`";
+                description = "Environment file containing Discord and uptime webhooks as `WEBHOOK_URL` and `UPTIME_WEBHOOK`";
               };
 
               paths = lib.mkOption {
@@ -254,31 +260,48 @@
         name: cfg:
         let
           statusWebookEnabled = (cfg.statusWebhook != null) || (cfg.statusEnvFile != null);
+          uptimeWebookEnabled = (cfg.uptimeWebhook != null) || (cfg.statusEnvFile != null);
         in
         lib.mkMerge (
           [
             {
-              # reduce memory use on pi zeros
               "restic-backups-${name}" = {
+                # reduce memory use on pi zeros
                 environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
+
                 onFailure = lib.optional statusWebookEnabled "notify-backup-${name}-failed-server.service";
+                onSuccess = lib.optional "notify-backup-${name}-successful-webhook.service";
               };
 
               "notify-backup-${name}-failed-server" = lib.mkIf statusWebookEnabled {
                 enable = true;
                 description = "Notify on failed backup";
-                wantedBy = [ "restic-backups-${name}-failure.target" ];
                 serviceConfig = {
                   Type = "oneshot";
                   EnvironmentFile = lib.mkIf (cfg.statusEnvFile != null) cfg.statusEnvFile;
                 };
-
                 script =
                   let
                     webhookUrl = if cfg.statusWebhook != null then cfg.statusWebhook else "$WEBHOOK_URL";
                   in
                   ''
-                    ${pkgs.curl}/bin/curl -F username=${config.networking.hostName} -F content="Backup failed" "${webhookUrl}"
+                    ${pkgs.curl}/bin/curl --silent -F username=${config.networking.hostName} -F content="Backup failed" "${webhookUrl}"
+                  '';
+              };
+
+              "notify-backup-${name}-success-server" = lib.mkIf uptimeWebookEnabled {
+                enable = true;
+                description = "Ping uptime monitor with successful backup";
+                serviceConfig = {
+                  Type = "oneshot";
+                  EnvironmentFile = lib.mkIf (cfg.statusEnvFile != null) cfg.statusEnvFile;
+                };
+                script =
+                  let
+                    webhookUrl = if cfg.uptimeWebhook != null then cfg.uptimeWebhook else "$UPTIME_URL";
+                  in
+                  ''
+                    ${pkgs.curl}/bin/curl --silent "${webhookUrl}"
                   '';
               };
             }
@@ -293,7 +316,6 @@
             "notify-backup-${name}-successful-desktop-${user}" = lib.mkIf cfg.notifySuccess {
               enable = true;
               description = "Notify user ${user} on successful backup";
-              wantedBy = [ "restic-backups-${name}-success.target" ];
               serviceConfig = {
                 Type = "oneshot";
                 User = config.users.users.${user}.name;
@@ -309,7 +331,6 @@
             "notify-backup-${name}-failed-desktop-${user}" = lib.mkIf cfg.notifyFailure {
               enable = true;
               description = "Notify user ${user} on failed backup";
-              wantedBy = [ "restic-backups-${name}-failure.target" ];
               serviceConfig = {
                 Type = "oneshot";
                 User = config.users.users.${user}.name;
