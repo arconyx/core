@@ -10,7 +10,7 @@
     let
       launchPrefix = "${pkgs.uwsm}/bin/uwsm app --";
 
-      terminal = "${launchPrefix} ${pkgs.kitty}/bin/kitty";
+      terminal = "${launchPrefix} $TERMINAL";
       fileManager = "${launchPrefix} ${pkgs.nautilus}/bin/nautilus";
 
       rofi = "${launchPrefix} ${pkgs.rofi}/bin/rofi";

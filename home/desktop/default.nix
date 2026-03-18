@@ -6,7 +6,6 @@
 }:
 {
   imports = [
-    ./kitty.nix
     ./laptop.nix
   ];
 
@@ -25,6 +24,11 @@
     ];
 
     programs.firefox.enable = true; # TODO: move custom config for tab bar and stuff into here
+
+    arcworks.terminal = {
+      default = "ghostty";
+      ghostty.enable = true;
+    };
 
     # use services.tailscale.extraSetFlags = [ "--operator=arc" ]; at nixos level
     # to enable full functionality
