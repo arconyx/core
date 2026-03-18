@@ -10,11 +10,14 @@
     programs.jujutsu = {
       enable = true;
       settings = {
-        # TODO: Make this only set if the attrs exist
-        user = {
-          name = config.programs.git.settings.user.name;
-          email = config.programs.git.settings.user.email;
-        };
+        user =
+          let
+            user = config.programs.git.settings.user;
+          in
+          lib.mkIf (user ? name && user ? email) {
+            name = config.programs.git.settings.user.name;
+            email = config.programs.git.settings.user.email;
+          };
         aliases.tug = [
           "bookmark"
           "move"
