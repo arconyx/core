@@ -138,7 +138,8 @@
 
   services.ssh-agent.enable = !osConfig.arcworks.server.pi;
 
-  # TODO: Parameterise per system
+  # TODO: Parameterise per system - kinda already done with osConfig dependence
+  # Be bad if we forgot to check hm on state version upgrade though
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new home Manager release introduces backwards
@@ -147,5 +148,5 @@
   # You can update home Manager without changing this value. See
   # the home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "25.05";
+  home.stateVersion = osConfig.system.stateVersion;
 }
