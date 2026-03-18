@@ -14,21 +14,7 @@
       cfg = config.arcworks.desktop.fileManager;
     in
     lib.mkIf cfg.nautilus.enable {
-      environment.systemPackages =
-        let
-          nautilus-turtle = pkgs.turtle.overrideAttrs (oldAttrs: {
-            postPatch = ''
-              ${oldAttrs.postPatch}
-              substituteInPlace ./data/de.philippun1.turtle.service --replace-fail "/usr" "$out" 
-            '';
-          });
-        in
-        with pkgs;
-        [
-          nautilus
-          nautilus-python
-          nautilus-turtle
-        ];
+      environment.systemPackages = [ pkgs.nautilus ];
 
       programs.nautilus-open-any-terminal = {
         enable = true;
@@ -39,7 +25,7 @@
       xdg.terminal-exec = {
         enable = true;
         package = pkgs.xdg-terminal-exec-mkhl;
-        # TODO: Tie this into the kitty module
+        # TODO: Tie this into the terminal module
         settings = {
           Hyprland = [ "kitty.desktop" ];
           default = [ "kitty.desktop" ];
