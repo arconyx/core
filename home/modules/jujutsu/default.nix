@@ -10,6 +10,7 @@
     programs.jujutsu = {
       enable = true;
       settings = {
+        # TODO: Make this only set if the attrs exist
         user = {
           name = config.programs.git.settings.user.name;
           email = config.programs.git.settings.user.email;

@@ -78,6 +78,8 @@
               };
             };
 
+            # TODO: home manager settings
+
           };
         }
       )

@@ -12,11 +12,7 @@
   imports = [
     ./desktop
     ./hypr
-
-    ./helix.nix
-    ./jj
-    ./julia.nix
-    ./neovim.nix
+    ./modules
   ];
 
   arcworks.helix.enable = true;

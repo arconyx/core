@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.arcworks.helix.enable = lib.mkEnableOption "neovim";
+  options.arcworks.helix.enable = lib.mkEnableOption "helix";
 
   config = lib.mkIf config.arcworks.helix.enable {
     programs.helix = {
