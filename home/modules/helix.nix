@@ -32,10 +32,13 @@
           # TODO: Hardcoded /config/nixos not very portable
           formatting = {
             command = [ "nixfmt" ];
+          }
+          # using the pi as a bad proxy for if /config exists
+          // lib.optionalAttrs (!osConfig.arcworks.server.pi) {
+            nixpkgs.expr = "import (builtins.getFlake \"/config/nixos\").inputs.nixpkgs { }";
+            options.nixos.expr = "(builtins.getFlake \"/config/nixos\").nixosConfigurations.${osConfig.networking.hostName}.options";
+            options.home-manager.expr = "(builtins.getFlake \"/config/nixos\").nixosConfigurations.${osConfig.networking.hostName}.options.home-manager.users.type.getSubOptions []";
           };
-          nixpkgs.expr = "import (builtins.getFlake \"/config/nixos\").inputs.nixpkgs { }";
-          options.nixos.expr = "(builtins.getFlake \"/config/nixos\").nixosConfigurations.${osConfig.networking.hostName}.options";
-          options.home-manager.expr = "(builtins.getFlake \"/config/nixos\").nixosConfigurations.${osConfig.networking.hostName}.options.home-manager.users.type.getSubOptions []";
         };
       };
     };
