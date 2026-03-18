@@ -2,7 +2,7 @@
 {
   imports = [
     ./helix.nix
-    ./jujutsu
+    ./jujutsu/jujutsu.nix
   ];
 
 }
