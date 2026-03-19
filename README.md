@@ -1,0 +1,1 @@
+Consumers should depend on a version branch so updates don't break things. Main may lag behind.
