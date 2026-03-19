@@ -5,10 +5,6 @@
   ...
 }:
 {
-  imports = [
-    ./laptop.nix
-  ];
-
   config = lib.mkIf osConfig.arcworks.desktop.enable {
 
     home.sessionVariables = lib.mkIf osConfig.arcworks.desktop.wallet.kwallet.enable {
