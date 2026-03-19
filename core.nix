@@ -68,24 +68,32 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    # archives
-    zip
-    xz
-    unzip
-    _7zz
+  environment.systemPackages =
+    with pkgs;
+    [
+      # curl, gzip, xz included by nixos defaults
 
-    # utils
-    which
-    htop
-    ripgrep # recursively searches directories for a regex pattern
-    eza # A modern replacement for ‘ls’
-    bat # cat clone, but better
-    fd # file search
+      # utils
+      which
+      htop
+      ripgrep # recursively searches directories for a regex pattern
+      eza # A modern replacement for ‘ls’
+      bat # cat clone, but better
+      fd # file search
 
-    # editor
-    helix
-  ];
+      # editor
+      helix
+    ]
+    ++ lib.optionals (!config.arcworks.server.minimal.enable) [
+      # archives
+      _7zz
+      zip
+      unzip
+
+      curlie
+      dysk
+      dust
+    ];
 
   # TODO: modularise helix at system level
   environment.sessionVariables.EDITOR = "hx";

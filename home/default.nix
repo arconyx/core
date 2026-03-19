@@ -10,19 +10,13 @@
 }:
 {
   imports = [
-    ./desktop
     ./hypr
     ./modules
   ];
 
-  arcworks.helix.enable = true;
+  programs.firefox.enable = osConfig.arcworks.desktop.enable;
 
-  # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-    curlie
-    dysk
-    dust
-  ];
+  arcworks.helix.enable = true;
 
   # Only for generic aliases compatible across shells
   home.shellAliases = {
