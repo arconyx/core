@@ -1,113 +1,15 @@
 {
-  osConfig,
-  pkgs,
   ...
 }:
 {
   imports = [
     ./helix.nix
     ./jujutsu/jujutsu.nix
+    ./terminal.nix
   ];
 
-  programs.firefox.enable = osConfig.arcworks.desktop.enable;
-
-  arcworks.helix.enable = true;
-
-  # Only for generic aliases compatible across shells
-  home.shellAliases = {
-    download = "curlie -sSfLO --no-clobber"; # download silently, but fail and print error if we get an http error
-    # masking standard commands
-    cat = "bat";
-  };
-
-  programs = {
-    fd.enable = true;
-    home-manager.enable = true; # Let home Manager install and manage itself.
-
-    # Avoid following error when running commands that don't exist:
-    # DBI connect('dbname=/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite','',...) failed: unable to open database file at /run/current-system/sw/bin/command-not-found line 13.
-    # cannot open database `/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite' at /run/current-system/sw/bin/command-not-found line 13.
-    # nix-index.enable = !osConfig.arcworks.server.pi;
-    # TODO: Disable command not found support entirely on systems without nixindex
-
-    bash = {
-      enable = true;
-      enableCompletion = true;
-      bashrcExtra = ''
-        export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
-      '';
-      historyControl = [ "ignoreboth" ];
-    };
-
-    bat = {
-      enable = true;
-      extraPackages = with pkgs.bat-extras; [
-        batman
-      ];
-    };
-
-    delta = {
-      enable = true;
-      enableGitIntegration = true;
-      options.navigate = true;
-    };
-
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-
-    eza = {
-      enable = true;
-      icons = "auto";
-    };
-
-    fish = {
-      enable = true;
-      interactiveShellInit = ''
-        fish_vi_key_bindings
-        bind / fzf-history-widget
-        batman --export-env | source
-      '';
-    };
-
-    fzf = {
-      enable = true;
-      defaultCommand = "fd --type f --strip-cwd-prefix";
-    };
-
-    git = {
-      enable = true;
-      ignores = [
-        ".direnv/"
-        ".envrc"
-      ];
-      settings = {
-        safe.directory = "/config/*";
-        init.defaultBranch = "main";
-        merge.conflictstyle = "zdiff3";
-        pull.ff = "only";
-      };
-      package = if osConfig.arcworks.server.minimal.enable then pkgs.gitMinimal else pkgs.git;
-    };
-
-    ripgrep = {
-      enable = true;
-      arguments = [
-        "--smart-case"
-        "--follow"
-      ];
-    };
-
-    ssh = {
-      enable = true;
-      matchBlocks."*" = {
-        hashKnownHosts = true;
-        addKeysToAgent = "yes";
-      };
-      enableDefaultConfig = false;
-    };
-  };
+  # Let home Manager install and manage itself.
+  programs.home-manager.enable = true;
 
   # cleanup old profiles automatically
   nix.gc = {
@@ -124,18 +26,4 @@
     enable = true;
     userDirs.enable = true;
   };
-
-  services.ssh-agent.enable = !osConfig.arcworks.server.pi;
-
-  # TODO: Parameterise per system - kinda already done with osConfig dependence
-  # Be bad if we forgot to check hm on state version upgrade though
-  # This value determines the home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update home Manager without changing this value. See
-  # the home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = osConfig.system.stateVersion;
 }

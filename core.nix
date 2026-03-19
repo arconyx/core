@@ -89,7 +89,6 @@
       zip
       unzip
 
-      curlie
       dysk
       dust
     ];
