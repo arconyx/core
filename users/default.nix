@@ -18,6 +18,10 @@
   };
 
   home-manager.users.arc = {
-    arcworks.jujutsu.enable = true;
+    arcworks = {
+      helix.enable = true;
+      jujutsu.enable = true;
+      terminal.enable = true;
+    };
   };
 }
