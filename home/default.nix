@@ -10,7 +10,6 @@
 }:
 {
   imports = [
-    ./hypr
     ./modules
   ];
 
