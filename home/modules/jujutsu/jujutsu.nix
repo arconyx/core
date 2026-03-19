@@ -11,7 +11,7 @@
       enable = true;
       settings =
         let
-          user = config.programs.git.settings.user;
+          user = config.programs.git.settings.user or { };
         in
         {
           aliases = {
