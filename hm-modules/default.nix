@@ -1,8 +1,3 @@
-# Imported for each user in core/users.nix
-# Some options are only disabled on the pis, to keep them minimal
-
-# TODO: Divide this so arc stuff isn't in with stuff for every user
-
 {
   osConfig,
   pkgs,
@@ -10,7 +5,8 @@
 }:
 {
   imports = [
-    ./modules
+    ./helix.nix
+    ./jujutsu/jujutsu.nix
   ];
 
   programs.firefox.enable = osConfig.arcworks.desktop.enable;
