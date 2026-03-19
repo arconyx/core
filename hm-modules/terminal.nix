@@ -11,7 +11,7 @@ let
   minimal = osConfig.arcworks.server.minimal.enable;
 in
 {
-  options.arcworks.terminal.enable = "personal terminal config";
+  options.arcworks.terminal.enable = lib.mkEnableOption "personal terminal config";
 
   config = lib.mkIf config.arcworks.terminal.enable {
     arcworks.helix.enable = true;
