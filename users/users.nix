@@ -95,17 +95,23 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
 
+      home-manager.sharedModules = [ { imports = [ ./../home ]; } ];
+
       home-manager.users = lib.mapAttrs (name: userCfg: {
-        imports = [ ./../home ];
         home.username = name;
         home.homeDirectory = "/home/${name}";
       }) allUsers;
 
-      # Wanted by home manager's xdg.portal.enabled
-      environment.pathsToLink = [
-        "/share/xdg-desktop-portal"
-        "/share/applications"
-      ];
+      # Wanted by home manager's xdg.portal.enable when home-manager.useUserPackages is true
+      environment.pathsToLink =
+        lib.optionals
+          (builtins.any (name: config.home-manager.users.${name}.xdg.portal.enable) (
+            builtins.attrNames allUsers
+          ))
+          [
+            "/share/xdg-desktop-portal"
+            "/share/applications"
+          ];
 
       users.users = lib.mapAttrs (
         name: userCfg:
