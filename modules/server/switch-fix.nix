@@ -10,9 +10,13 @@
 let
   rollback-profile-path = "/var/lib/nix-autorollback/profile";
   rollback-delay = "600";
-  set-rollback = pkgs.writeShellScriptBin "set-rollback" ''
+  set-rollback-current = pkgs.writeShellScriptBin "set-rollback-to-current" ''
     sudo mkdir -p $(dirname ${rollback-profile-path})
     sudo ln -sf $(readlink /run/current-system) ${rollback-profile-path}
+  '';
+  set-rollback-booted = pkgs.writeShellScriptBin "set-rollback-to-booted" ''
+    sudo mkdir -p $(dirname ${rollback-profile-path})
+    sudo ln -sf $(readlink /run/booted-system) ${rollback-profile-path}
   '';
   cancel-rollback = pkgs.writeShellScriptBin "cancel-rollback" ''
     sudo systemctl stop nix-autorollback.service
@@ -22,7 +26,8 @@ in
 {
   config = lib.mkIf config.arcworks.server.enable {
     environment.systemPackages = [
-      set-rollback
+      set-rollback-current
+      set-rollback-booted
       cancel-rollback
     ];
 
