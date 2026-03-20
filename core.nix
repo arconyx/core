@@ -43,7 +43,6 @@
         merge.conflictstyle = "zdiff3";
         pull.ff = "only";
       };
-      package = if config.arcworks.server.minimal.enable then pkgs.gitMinimal else pkgs.git;
     };
 
     # default neovim config for editing as root
@@ -62,7 +61,7 @@
     };
 
     nh = {
-      enable = !config.arcworks.server.minimal.enable;
+      enable = true;
       flake = "/config";
     };
   };
@@ -83,7 +82,8 @@
       # editor
       helix
     ]
-    ++ lib.optionals (!config.arcworks.server.minimal.enable) [
+    # TODO: exclude on minimal systems
+    ++ [
       # archives
       _7zz
       zip

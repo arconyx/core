@@ -3,17 +3,19 @@
 {
   config,
   lib,
-  osConfig,
   pkgs,
   ...
 }:
 let
-  minimal = osConfig.arcworks.server.minimal.enable;
+  cfg = config.arcworks.terminal;
 in
 {
-  options.arcworks.terminal.enable = lib.mkEnableOption "personal terminal config";
+  options.arcworks.terminal = {
+    enable = lib.mkEnableOption "personal terminal config";
+    minimal = lib.mkEnableOption "remove some utils";
+  };
 
-  config = lib.mkIf config.arcworks.terminal.enable {
+  config = lib.mkIf cfg.enable {
     arcworks.helix.enable = true;
 
     programs = {
@@ -31,13 +33,13 @@ in
       };
 
       delta = {
-        enable = !minimal;
+        enable = !cfg.minimal;
         enableGitIntegration = true;
         options.navigate = true;
       };
 
       direnv = {
-        enable = !minimal;
+        enable = !cfg.minimal;
         nix-direnv.enable = true;
       };
 
@@ -82,7 +84,7 @@ in
           merge.conflictstyle = "zdiff3";
           pull.ff = "only";
         };
-        package = if minimal then pkgs.gitMinimal else pkgs.git;
+        package = if cfg.minimal then pkgs.gitMinimal else pkgs.git;
       };
 
       ripgrep = {
@@ -103,6 +105,6 @@ in
       };
     };
 
-    services.ssh-agent.enable = !minimal;
+    services.ssh-agent.enable = !cfg.minimal;
   };
 }

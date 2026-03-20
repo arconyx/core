@@ -266,8 +266,9 @@
           [
             {
               "restic-backups-${name}" = {
+                # TODO: See if disabling this has actually broken anything
                 # reduce memory use on pi zeros
-                environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
+                # environment.GOGC = lib.mkIf config.arcworks.server.pi "10";
 
                 onFailure = lib.optional statusWebookEnabled "notify-backup-${name}-failed-server.service";
                 onSuccess = lib.optional uptimeWebookEnabled "notify-backup-${name}-success-server.service";

@@ -1,4 +1,7 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   # Use Lix
   nix.package = pkgs.lixPackageSets.latest.lix;
@@ -30,7 +33,7 @@
     # This option is not the default since it is generally not desirable for a transient failure
     # in obtaining the substitutes to lead to a full build from source (with the related consumption of resources).
     # - [Lix Docs](https://docs.lix.systems/manual/lix/stable/command-ref/opt-common.html)
-    fallback = !config.arcworks.server.pi;
+    fallback = true;
     trusted-users = [ "@wheel" ];
 
     # TODO: Do we actually want this?

@@ -33,8 +33,8 @@
           formatting = {
             command = [ "nixfmt" ];
           }
-          # using the pi as a bad proxy for if /config exists
-          // lib.optionalAttrs (!osConfig.arcworks.server.pi) {
+          # using the desktop as a bad proxy for if /config exists
+          // lib.optionalAttrs (!osConfig.arcworks.desktop.enable) {
             nixpkgs.expr = "import (builtins.getFlake \"/config\").inputs.nixpkgs { }";
             options.nixos.expr = "(builtins.getFlake \"/config\").nixosConfigurations.${osConfig.networking.hostName}.options";
             options.home-manager.expr = "(builtins.getFlake \"/config\").nixosConfigurations.${osConfig.networking.hostName}.options.home-manager.users.type.getSubOptions []";
