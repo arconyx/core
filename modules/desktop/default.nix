@@ -9,7 +9,6 @@ let
 in
 {
   imports = [
-    ./gaming.nix
     ./nvidia.nix
     ./wallet.nix
   ];
