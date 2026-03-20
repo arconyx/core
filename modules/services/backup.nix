@@ -200,12 +200,29 @@
         # doesn't cause the files to start getting backed up
         exclude = lib.lists.unique (
           [
-            # TODO: Parameterise this a bit more, so e.g. family systems backup ~/Downloads
+            # Note that inverted matches require wildcard matching the parent.
+            # If we exclude `/folder/` then `!/folder/file` will have no effect.
+            # But if we exclude `/folder/*/` then `!/folder/file` will work
+
             # General
             "/nix/store" # should never be included, but we'll be safe and explicitly exclude it
             ".cache" # why would we ever want a cache dir?
             ".local/share/Trash" # Exclude trash for obvious reasons
             "/home/*/.icons" # Handled by home manager
+            "/home/*/.local/share/icons"
+            "kitty-ssh-kitten"
+            # annoying electron caches
+            "/home/*/.config/*/*Cache*"
+            "/home/*/.config/*/*cache*"
+            "baloo" # plasma file index
+            "__pycache__"
+
+            # These ones could conceivably bite us in the ass in e.g.
+            # source code trees but it's probably fine
+            "Cache"
+            "cache"
+            "logs"
+            "Logs"
 
             # Dev tools
             ".git" # this should be obtainable from the remote with minimal loss
@@ -213,15 +230,55 @@
             "/home/*/.java" # Eww. Mostly looks like generated font config stuff.
             "node_modules" # Let npm worry about this
             "/home/*/.m2" # maven local
+            "/home/*/.config/direnv"
+            ".direnv"
+            # We want Julia environments but we don't care about the rest
+            "/home/*/.julia/*"
+            "!/home/*/.julia/environments"
+            "/home/*/.npm"
+            "/home/*/.nv"
+            "/home/*/.pgadmin"
+            "/home/*/.local/share/pnpm"
+            "/home/*/.local/share/uv"
+            # https://go.dev/wiki/GOPATH
+            "/home/*/go"
+            # just seems to have telemetry config
+            ".config/go"
 
-            # Julia is annoying. We only want environments.
-            "/home/*/.julia/*" # the trailing wildcard is important because if we exclude .julia/ itself, then the invert won't work
-            "!/home/*/.julia/environments" # inverted with ! to cancel match
+            # vscode and codium
+            # keep the extensions manifest but not the code
+            "/home/*/.vscode/extensions/"
+            "/home/*/.vscode-oss/extensions/"
+            "!/home/*/.vscode/extensions/extensions.json"
+            "!/home/*/.vscode-oss/extensions/extensions.json"
+            # backup user settings but dump the rest
+            # it's mostly electron junk anyway
+            # plus some workspace state, which we can afford to lose
+            "/home/*/.config/Code/*"
+            "/home/*/.config/VSCodium/*"
+            "!/home/*/.config/Code/User/settings.json"
+            "!/home/*/.config/VSCodium/User/settings.json"
 
             # What is it with programs sticking their crap into ~ instead of following XDG?
             "/home/*/.nix-defexpr"
             "/home/*/.nix-profile"
             # Lix has a flag to follow XDG - we can remove this once arconyx/core#2 is closed and we've migrated
+
+            # firefox
+            ".mozilla/firefox/Crash Reports"
+            ".mozilla/firefox/*/datareporting/"
+            # Stores data for websites, which we shouldn't trust to be durable
+            "/home/*/.mozilla/firefox/*/storage"
+
+            # Games
+            "lutris/runners"
+            "lutris/runtime"
+            # I have a few of these from godot
+            # Steam also has `shadercache` but that's handled under the next exclude
+            "shader_cache"
+            # Can just reinstall from Steam
+            "/home/*/.local/share/Steam"
+
           ]
           ++ globalCfg.exclude
           ++ cfg.exclude
