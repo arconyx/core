@@ -21,44 +21,32 @@
       pre-commit-hooks,
       ...
     }:
-    let
-      supportedSystems = [
-        "x86_64-linux"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      baseModules = [
-        home-manager.nixosModules.home-manager
-      ];
-    in
     {
-      checks = forAllSystems (system: {
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = self;
-          hooks = {
-            deadnix = {
-              enable = true;
-              settings.noLambdaArg = true;
-            };
-            nixfmt-rfc-style.enable = true;
-            ripsecrets.enable = true;
-            shellcheck.enable = true;
+      checks.x86_64-linux.pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
+        src = self;
+        hooks = {
+          deadnix = {
+            enable = true;
+            settings.noLambdaArg = true;
           };
+          nixfmt-rfc-style.enable = true;
+          ripsecrets.enable = true;
+          shellcheck.enable = true;
         };
-      });
+      };
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
 
-      devShells = forAllSystems (system: {
-        default = nixpkgs.legacyPackages.${system}.mkShell {
-          inherit (self.checks.${system}.pre-commit-check) shellHook;
-          buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
-        };
-      });
+      devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+        inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
+        buildInputs = self.checks.x86_64-linux.pre-commit-check.enabledPackages;
+      };
 
-      nixosModules.default =
-        { ... }:
-        {
-          imports = baseModules ++ [ ./core.nix ];
-        };
+      nixosModules.default = {
+        imports = [
+          home-manager.nixosModules.home-manager
+          ./core.nix
+        ];
+      };
     };
 }
