@@ -77,7 +77,9 @@
               };
             };
 
-            # TODO: home manager settings
+            homeManager.enable = lib.mkEnableOption "home manager configuration for this user" // {
+              default = true;
+            };
 
           };
         }
@@ -87,7 +89,8 @@
   config =
     let
       cfg = config.arcworks.users;
-      allUsers = lib.filterAttrs (name: value: value.enable) cfg;
+      allUsers = lib.filterAttrs (name: userCfg: userCfg.enable) cfg;
+      hmUsers = lib.filterAttrs (name: userCfg: userCfg.homeManager.enable) allUsers;
     in
     {
       home-manager.useGlobalPkgs = true;
@@ -99,13 +102,15 @@
       home-manager.users = lib.mapAttrs (name: userCfg: {
         home.username = name;
         home.homeDirectory = "/home/${name}";
-      }) allUsers;
+        # Let home Manager install and manage itself.
+        programs.home-manager.enable = true;
+      }) hmUsers;
 
       # Wanted by home manager's xdg.portal.enable when home-manager.useUserPackages is true
       environment.pathsToLink =
         lib.optionals
           (builtins.any (name: config.home-manager.users.${name}.xdg.portal.enable) (
-            builtins.attrNames allUsers
+            builtins.attrNames hmUsers
           ))
           [
             "/share/xdg-desktop-portal"
