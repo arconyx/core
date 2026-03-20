@@ -94,7 +94,7 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
 
-      home-manager.sharedModules = [ { imports = [ ./../hm-modules ]; } ];
+      home-manager.sharedModules = [ ./../hm-modules ];
 
       home-manager.users = lib.mapAttrs (name: userCfg: {
         home.username = name;
