@@ -14,7 +14,7 @@
     };
     useSddmTheme = lib.mkOption {
       type = lib.types.bool;
-      default = !config.arcworks.desktop.desktopEnvironment.plasma.enable;
+      default = true;
       example = "true";
       description = "Use custom SDDM theme (currently sddm-astronaut) instead of default";
     };

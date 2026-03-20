@@ -12,7 +12,6 @@
     ./hypr.nix
     ./laptop.nix
     ./nvidia.nix
-    ./plasma.nix
     ./wallet.nix
   ];
 
