@@ -18,6 +18,17 @@ in
   config = lib.mkIf cfg.enable {
     arcworks.helix.enable = true;
 
+    home.packages = with pkgs; [
+      # archives
+      _7zz
+      zip
+      unzip
+
+      # disk
+      dysk
+      dust
+    ];
+
     programs = {
       bash = {
         enable = true;
@@ -85,6 +96,11 @@ in
           pull.ff = "only";
         };
         package = if cfg.minimal then pkgs.gitMinimal else pkgs.git;
+      };
+
+      nh = {
+        enable = true;
+        flake = "/config";
       };
 
       ripgrep = {

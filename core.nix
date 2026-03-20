@@ -26,13 +26,7 @@
 
   programs = {
     fish.enable = true;
-
-    bat = {
-      enable = true;
-      extraPackages = with pkgs.bat-extras; [
-        batman
-      ];
-    };
+    bat.enable = true;
 
     git = {
       enable = true;
@@ -43,54 +37,22 @@
         pull.ff = "only";
       };
     };
-
-    # default neovim config for editing as root
-    # overriden by home manager
-    neovim = {
-      enable = false; # disabled in favour of helix
-      defaultEditor = true;
-      vimAlias = true;
-      configure = {
-        customRC = ''
-            set number
-          	set shiftwidth=4 smarttab
-          	set tabstop=7 softtabstop=0
-        '';
-      };
-    };
-
-    nh = {
-      enable = true;
-      flake = "/config";
-    };
   };
 
-  environment.systemPackages =
-    with pkgs;
-    [
-      # curl, gzip, xz included by nixos defaults
+  environment.systemPackages = with pkgs; [
+    # curl, gzip, xz included by nixos defaults
 
-      # utils
-      which
-      htop
-      ripgrep # recursively searches directories for a regex pattern
-      eza # A modern replacement for ‘ls’
-      bat # cat clone, but better
-      fd # file search
+    # utils
+    which
+    htop
+    ripgrep # recursively searches directories for a regex pattern
+    eza # A modern replacement for ‘ls’
+    bat # cat clone, but better
+    fd # file search
 
-      # editor
-      helix
-    ]
-    # TODO: exclude on minimal systems
-    ++ [
-      # archives
-      _7zz
-      zip
-      unzip
-
-      dysk
-      dust
-    ];
+    # editor
+    helix
+  ];
 
   # TODO: modularise helix at system level
   environment.sessionVariables.EDITOR = "hx";
