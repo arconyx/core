@@ -36,7 +36,7 @@ in
     # This transitively enables nvidia support via hardware.nvidia
     # TODO: Replace with a simple hardware.nvidia.enable
     services.xserver.videoDrivers = [ "nvidia" ];
-    hardware.nvidia.open = true;
+    hardware.nvidia.open = cfg.open;
     # not needed for hardware functionality but useful
     environment.systemPackages = [ pkgs.nvtopPackages.nvidia ];
     # gpu acceleration
