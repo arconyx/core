@@ -10,7 +10,6 @@ in
 {
   imports = [
     ./nvidia.nix
-    ./wallet.nix
   ];
 
   options.arcworks.desktop = {
@@ -20,12 +19,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # default desktop config
-    arcworks.desktop = {
-      wallet.kwallet.enable = true;
-    };
-
-    # Enable networking
     networking.networkmanager.enable = true;
 
     # debug tooling
