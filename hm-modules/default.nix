@@ -3,6 +3,7 @@
 }:
 {
   imports = [
+    ./desktop.nix
     ./helix.nix
     ./jujutsu/jujutsu.nix
     ./terminal.nix
