@@ -10,7 +10,6 @@
     ./modules
     ./users
 
-    ./boot.nix
     ./nix.nix
   ];
 
