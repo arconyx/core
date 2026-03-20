@@ -10,7 +10,6 @@ in
 {
   imports = [
     ./gaming.nix
-    ./laptop.nix
     ./nvidia.nix
     ./wallet.nix
   ];
