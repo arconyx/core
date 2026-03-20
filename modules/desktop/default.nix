@@ -9,7 +9,6 @@ let
 in
 {
   imports = [
-    ./fileManager.nix
     ./gaming.nix
     ./laptop.nix
     ./nvidia.nix
@@ -25,7 +24,6 @@ in
   config = lib.mkIf cfg.enable {
     # default desktop config
     arcworks.desktop = {
-      fileManager.nautilus.enable = true;
       wallet.kwallet.enable = true;
     };
 
