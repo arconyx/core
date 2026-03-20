@@ -22,7 +22,6 @@
             };
 
             isAdmin = lib.mkEnableOption "wheel membership";
-            hide = lib.mkEnableOption "hide user from greeters";
 
             canUseNix = lib.mkOption {
               description = "Allows the user to connect to the Nix daemon.";
@@ -129,11 +128,6 @@
           userCfg.settings
         ]
       ) allUsers;
-
-      # hide users in sddm
-      services.displayManager.sddm.settings.Users.HideUsers = builtins.concatStringsSep "," (
-        builtins.attrNames (lib.filterAttrs (n: v: v.hide) allUsers)
-      );
 
       # Restrict allowed users to only normal uses, excluding service accounts. This reduces risk
       # in the case of vulnerabilities in the daemon.
