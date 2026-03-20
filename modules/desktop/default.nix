@@ -76,6 +76,9 @@ in
 
     # TODO: Unstable has a change incoming that will automatically
     # refresh roots when direnv loads a directory
+    # Go read the readme and apply changes after upgrading to 26.05
+    # https://github.com/linyinfeng/angrr?tab=readme-ov-file
+    # TODO: Only enable when direnv is enabled
     services.angrr = {
       enable = true;
       enableNixGcIntegration = true;
