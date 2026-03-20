@@ -33,10 +33,7 @@
     fallback = !config.arcworks.server.pi;
     trusted-users = [ "@wheel" ];
 
-    # Flox for cuda
-    # Which we might also get through nix community, but hey
-    # > With extra-substituters, Nix always checks cache.nixos.org first, and only uses Flox’s cache for packages not found upstream.
-    # - https://discourse.nixos.org/t/nix-flox-nvidia-opening-up-cuda-redistribution-on-nix/69189
+    # TODO: Do we actually want this?
     extra-substituters = [
       "https://nix-community.cachix.org?priority=50"
     ];

@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.arcworks.desktop.nvidia;
+in
 {
   options.arcworks.desktop.nvidia = {
     enable = lib.mkEnableOption "nvidia support";
@@ -19,43 +22,31 @@
       type = lib.types.nullOr lib.types.bool;
       default = null;
     };
-    cuda.enable = lib.mkEnableOption "CUDA enabled builds";
   };
 
-  config =
-    let
-      cfg = config.arcworks.desktop.nvidia;
-    in
-    lib.mkIf cfg.enable {
-      assertions = [
-        {
-          assertion = config.arcworks.desktop.enable;
-          message = "arcworks.desktop.nvidia.enable requires arcworks.desktop.enable";
-        }
-      ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.arcworks.desktop.enable;
+        message = "arcworks.desktop.nvidia.enable requires arcworks.desktop.enable";
+      }
+    ];
 
-      nixpkgs.config.cudaSupport = cfg.cuda.enable;
-      nix.settings = lib.mkIf cfg.cuda.enable {
-        substituters = [
-          "https://cache.nixos-cuda.org?priority=60"
-        ];
-        trusted-public-keys = [
-          "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
-        ];
-      };
-
-      # Load nvidia driver for Xorg and Wayland
-      # This transitively enables nvidia support via hardware.nvidia
-      services.xserver.videoDrivers = [ "nvidia" ];
-
-      hardware.graphics.extraPackages = [ pkgs.nvidia-vaapi-driver ];
-      hardware.nvidia.open = lib.mkIf (cfg.open != null) cfg.open;
-
-      environment.systemPackages = [ pkgs.nvtopPackages.nvidia ];
-      environment.variables = {
-        # https://github.com/elFarto/nvidia-vaapi-driver/#firefox
-        LIBVA_DRIVER_NAME = "nvidia"; # Required for libva 2.20+, forces libva to load this driver.
-        MOZ_DISABLE_RDD_SANDBOX = 1; # Disables the sandbox for the RDD process that the decoder runs in.
-      };
+    # Load nvidia driver for Xorg and Wayland
+    # This transitively enables nvidia support via hardware.nvidia
+    # TODO: Replace with a simple hardware.nvidia.enable
+    services.xserver.videoDrivers = [ "nvidia" ];
+    hardware.nvidia.open = true;
+    # not needed for hardware functionality but useful
+    environment.systemPackages = [ pkgs.nvtopPackages.nvidia ];
+    # gpu acceleration
+    # Also requires changes in firefox `about:config`
+    # https://github.com/elFarto/nvidia-vaapi-driver/#firefox
+    # Running `nvidia-smi` while decoding a video should show a Firefox process with C in the Type column.
+    hardware.graphics.extraPackages = [ pkgs.nvidia-vaapi-driver ];
+    environment.variables = {
+      LIBVA_DRIVER_NAME = "nvidia"; # Required for libva 2.20+, forces libva to load this driver.
+      MOZ_DISABLE_RDD_SANDBOX = 1; # Disables the sandbox for the RDD process that the decoder runs in.
     };
+  };
 }
