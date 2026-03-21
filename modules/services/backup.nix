@@ -177,20 +177,19 @@
         # We could maybe use globbing but this is nice and clear
         paths = lib.lists.unique (
           [
-            "/root"
             # Needed to ensure consistent UID/GUID mappings on restore
             # We could fix uids in the user config (and did before now), but this is more flexible at the risk of problems when moving data.
             # https://discourse.nixos.org/t/psa-pinning-users-uid-is-important-when-reinstalling-nixos-restoring-backups/21819
             "/var/lib/nixos"
             "/etc/group"
             "/etc/machine-id"
-            "/etc/NetworkManager/system-connections"
             "/etc/passwd"
             "/etc/shadow"
             "/etc/subgid"
             "/home"
             "/srv"
           ]
+          ++ lib.optional config.networking.networkmanager.enable "/etc/NetworkManager/system-connections"
           ++ globalCfg.paths
           ++ cfg.paths
         );

@@ -126,7 +126,7 @@
             description = userCfg.description;
             extraGroups =
               lib.optionals userCfg.isAdmin [ "wheel" ]
-              ++ lib.optionals config.networking.networkmanager.enable [ "networkmanager" ];
+              ++ lib.optional config.networking.networkmanager.enable "networkmanager";
             shell = lib.mkIf (userCfg.shell != null) userCfg.shell;
             openssh.authorizedKeys.keys = userCfg.sshKeys;
           }
