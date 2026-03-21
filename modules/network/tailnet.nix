@@ -17,6 +17,9 @@ in
     # https://tailscale.com/docs/features/firewall-mode
     systemd.services.tailscaled.environment.TS_DEBUG_FIREWALL_MODE =
       lib.mkIf config.networking.nftables.enable "auto";
+    # The standard nixos firewall blocks connections to local ports over tailscale if
+    # we don't mark the interface as trusted
+    networking.firewall.trustedInterfaces = lib.mkIf config.networking.nftables.enable [ "tailscale0" ];
 
     systemd.network.wait-online.ignoredInterfaces = [ "tailscale0" ];
 
