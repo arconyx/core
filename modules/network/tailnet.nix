@@ -18,6 +18,8 @@ in
     systemd.services.tailscaled.environment.TS_DEBUG_FIREWALL_MODE =
       lib.mkIf config.networking.nftables.enable "auto";
 
+    systemd.network.wait-online.ignoredInterfaces = [ "tailscale0" ];
+
     services.tailscale = {
       enable = true;
       extraSetFlags = [
