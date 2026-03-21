@@ -1,4 +1,8 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
   imports = [
     ./tailnet.nix
@@ -12,6 +16,8 @@
   # releases should ship it
   # and it's not like we use docker anyway
   networking.nftables.enable = true;
+
+  networking.networkmanager.dns = lib.mkIf config.services.resolved.enable "systemd-resolved";
 
   services.openssh = {
     # disable ssh when on tailnet
