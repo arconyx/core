@@ -14,6 +14,10 @@ in
     # https://tailscale.com/blog/sisyphean-dns-client-linux
     services.resolved.enable = true;
 
+    # https://tailscale.com/docs/features/firewall-mode
+    systemd.services.tailscaled.environment.TS_DEBUG_FIREWALL_MODE =
+      lib.mkIf config.networking.nftables.enable "auto";
+
     services.tailscale = {
       enable = true;
       extraSetFlags = [
