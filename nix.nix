@@ -24,6 +24,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
+      "coerce-integers"
     ];
     # The most common scenario in which this is useful is when we have registered substitutes
     # in order to perform binary distribution from, say, a network repository.
