@@ -12,7 +12,7 @@
         nix-eval-jobs
         nix-fast-build
         colmena
-        nix-direnv
+        # nix-direnv configured in hm-modules/terminal.nix to avoid an infinite recursion problem
         ;
     })
   ];

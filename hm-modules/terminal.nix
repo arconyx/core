@@ -52,6 +52,7 @@ in
       direnv = {
         enable = !cfg.minimal;
         nix-direnv.enable = true;
+        nix-direnv.package = pkgs.lixPackageSets.latest.nix-direnv;
       };
 
       eza = {
