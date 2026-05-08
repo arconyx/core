@@ -12,6 +12,7 @@
         nix-eval-jobs
         nix-fast-build
         colmena
+        nix-direnv
         ;
     })
   ];
