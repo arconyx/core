@@ -22,7 +22,7 @@
   # Link Local Name Resolution for LAN DNS
   # (reach LAN devices by hostname)
   # Having this true is a (small) security risk and we don't need it
-  services.resolved.llmnr = "false";
+  services.resolved.settings.Resolve.LLMNR = false;
 
   programs = {
     fish.enable = true;
