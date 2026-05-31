@@ -75,14 +75,26 @@ in
     services.angrr = {
       enable = true;
       enableNixGcIntegration = true;
-      period = "2months";
-      extraArgs = [
-        "--ignore-directories-in-home"
-        ".local/state/nix/profiles"
-        "--ignore-directories-in-home"
-        ".local/state/home-manager/gcroots"
-      ];
+      settings =
+        let
+          period = "2months";
+        in
+        {
+          temporary-root-policies = {
+            direnv = {
+              path-regex = "/\\.direnv/";
+              period = period;
+            };
+            result = {
+              path-regex = "/result[^/]*$";
+              period = period;
+            };
+          };
+        };
     };
+
+    # nix-direnv handles this
+    programs.direnv.angrr.enable = false;
 
   };
 }
