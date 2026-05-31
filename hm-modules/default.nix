@@ -22,6 +22,10 @@
 
   xdg = {
     enable = true;
-    userDirs.enable = true;
+    userDirs = {
+      enable = true;
+      # this is the default for state versions >=26.05
+      setSessionVariables = false;
+    };
   };
 }
