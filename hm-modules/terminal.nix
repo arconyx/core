@@ -114,7 +114,7 @@ in
 
       ssh = {
         enable = true;
-        matchBlocks."*" = {
+        settings."*" = {
           hashKnownHosts = true;
           addKeysToAgent = "yes";
         };
