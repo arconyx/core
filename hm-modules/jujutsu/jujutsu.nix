@@ -51,7 +51,7 @@
                   ),
                   concat(
                     separate(" ",
-                      format_short_change_id_with_hidden_and_divergent_info(commit),
+                      format_short_change_id_with_change_offset(commit),
                       if(!commit.mine(), format_short_signature_oneline(commit.author())),
                       truncate_end(5, commit_timestamp(commit).ago()),
                       commit.bookmarks(),
