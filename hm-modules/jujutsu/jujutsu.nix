@@ -57,8 +57,6 @@
                       commit.bookmarks(),
                       commit.tags(),
                       commit.working_copies(),
-                      if(commit.git_head(), label("git_head", "git_head()")),
-                      
                       if(commit.conflict(), label("conflict", "conflict")),
                       if(config("ui.show-cryptographic-signatures").as_boolean(),
                         format_short_cryptographic_signature(commit.signature())),
