@@ -14,23 +14,19 @@
           user = config.programs.git.settings.user or { };
         in
         {
-          aliases = {
-            tug = [
-              "bookmark"
-              "move"
-              "--from"
-              "closest_bookmark(@-)"
-              "--to"
-              "@-"
-            ];
-          };
-
           git = {
             private-commits = "description(glob:'wip:*') | description(glob:'private:*') | description(glob:'broken:*')";
           };
 
+          revsets = {
+            bookmark-advance-to = "closest_pushable(@)";
+          };
+
           revset-aliases = {
-            "closest_bookmark(to)" = "heads(::to & bookmarks())";
+            # Closest revision that is mutable, described and either non-empty or a merge
+            "closest_pushable(to)" = ''
+              heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))
+            '';
           };
 
           templates = {
