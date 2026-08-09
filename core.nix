@@ -74,7 +74,7 @@
       let
         rev = config.system.configurationRevision;
         trimmed = builtins.substring 0 8 rev;
-        shortRev = if lib.hasSuffix "dirty" then "${trimmed}-dirty" else trimmed;
+        shortRev = if lib.hasSuffix "dirty" rev then "${trimmed}-dirty" else trimmed;
       in
       lib.maybeEnv "NIXOS_LABEL" (
         builtins.concatStringsSep "-" (
