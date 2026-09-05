@@ -87,5 +87,15 @@
       );
 
     systemd.enableStrictShellChecks = true;
+
+    services.postgresql.initdbArgs = [
+      # use the builtin C.UTF-8 locale (not the libc version) which should be stable across versions
+      # when the locale depends on libc or icu then version changes can invalidate indices
+      # for some reason this warns... and still uses the invalid indices, which can lead to corruption
+      # so we use a builtin provider and hopefully avoid the hassle
+      "--encoding=UTF8"
+      "--locale=C.UTF-8"
+      "--locale-provider=builtin"
+    ];
   };
 }
