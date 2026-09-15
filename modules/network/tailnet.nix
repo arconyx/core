@@ -28,7 +28,6 @@ in
       extraSetFlags = [
         "--ssh"
         "--webclient"
-        "--accept-routes"
       ];
       permitCertUid = lib.mkIf config.services.caddy.enable "caddy";
     };
