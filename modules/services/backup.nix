@@ -105,6 +105,28 @@
                 ];
               };
 
+              prepareCommands = lib.mkOption {
+                type = lib.types.lines;
+                default = "";
+                example = ''
+                  fake-program --dump /tmp/test.tar.gz
+                '';
+                description = ''
+                  Commands to run after the backup. Multiple definitions are concatenated.
+                '';
+              };
+
+              cleanupCommands = lib.mkOption {
+                type = lib.types.lines;
+                default = "";
+                example = ''
+                  rm /tmp/test.tar.gz
+                '';
+                description = ''
+                  Commands to run before the backup. Multiple definitions are concatenated.
+                '';
+              };
+
               prune = lib.mkOption {
                 type = lib.types.bool;
                 default = true;
@@ -324,6 +346,9 @@
           Persistent = isDesktop;
           RandomizedDelaySec = "4hr";
         };
+
+        backupPrepareCommand = cfg.prepareCommands;
+        backupCleanupCommand = cfg.cleanupCommands;
       }) backupCfgs;
 
       systemd.services = lib.concatMapAttrs (
