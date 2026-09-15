@@ -215,6 +215,15 @@
             "/home/*/.config/*/*cache*"
             "baloo" # plasma file index
             "__pycache__"
+            "/home/*/.local/share/systemd"
+            "/home/*/.local/share/gvfs-metadata"
+            "/home/*/.local/share/vulkan"
+
+            # The $XDG_STATE_HOME contains state data that should persist
+            # between (application) restarts, but that is not important or
+            # portable enough to the user that it should be stored in
+            # $XDG_DATA_HOME
+            "/home/*/.local/state"
 
             # These ones could conceivably bite us in the ass in e.g.
             # source code trees but it's probably fine
@@ -243,6 +252,10 @@
             "/home/*/go"
             # just seems to have telemetry config
             ".config/go"
+            "/home/*/.local/share/direnv"
+            "/home/*/.local/share/gem"
+            # hopefully anything important is in ~/.config/JetBrains
+            "/home/*/.local/share/JetBrains"
 
             # vscode and codium
             # keep the extensions manifest but not the code
@@ -277,7 +290,8 @@
             "shader_cache"
             # Can just reinstall from Steam
             "/home/*/.local/share/Steam"
-
+            "/home/*/.local/share/umu"
+            "/home/*/.local/share/GameAnalytics"
           ]
           ++ globalCfg.exclude
           ++ cfg.exclude
