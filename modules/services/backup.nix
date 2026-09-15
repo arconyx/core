@@ -347,8 +347,8 @@
           RandomizedDelaySec = "4hr";
         };
 
-        backupPrepareCommand = cfg.prepareCommands;
-        backupCleanupCommand = cfg.cleanupCommands;
+        backupPrepareCommand = if cfg.prepareCommands == "" then null else cfg.prepareCommands;
+        backupCleanupCommand = if cfg.cleanupCommands == "" then null else cfg.cleanupCommands;
       }) backupCfgs;
 
       systemd.services = lib.concatMapAttrs (
