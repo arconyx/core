@@ -36,7 +36,6 @@
     # in obtaining the substitutes to lead to a full build from source (with the related consumption of resources).
     # - [Lix Docs](https://docs.lix.systems/manual/lix/stable/command-ref/opt-common.html)
     fallback = true;
-    trusted-users = [ "@wheel" ];
 
     # TODO: Do we actually want this?
     extra-substituters = [
