@@ -8,8 +8,15 @@
   };
 
   config = lib.mkIf config.arcworks.network.homeLan {
-    # reduce simultaneous downloads over slow connection
-    nix.settings.max-substitution-jobs = 2;
+    nix.settings = {
+      # reduce simultaneous downloads over slow connection
+      max-substitution-jobs = 2;
+      # keep tarballs for a day since most of the time
+      # they don't actually change that fast (and if they
+      # do we don't care)
+      # less redownloading nix every hour
+      tarball-ttl = 86400;
+    };
 
     # trust caddy local ca root certificate
     security.pki.certificates = [
