@@ -97,5 +97,37 @@
       "--locale=C.UTF-8"
       "--locale-provider=builtin"
     ];
+
+    nixpkgs.overlays = [
+      (self: super: {
+        cacert =
+          let
+            newVersion = "3.131.1";
+          in
+          super.cacert.overrideAttrs (
+            final: prev:
+            if (lib.versionOlder prev.version newVersion) then
+              builtins.warn "Using cacert override" {
+                version = "3.131.1";
+                src = self.fetchurl {
+                  urls =
+                    let
+                      # This file is effectively a public interface, see the homepage link
+                      file = "lib/ckfw/builtins/certdata.txt";
+                      tag = "NSS_${lib.replaceStrings [ "." ] [ "_" ] newVersion}_RTM";
+                    in
+                    [
+                      # Prefer mercurial as the canonical source, while github is just a mirror
+                      "https://hg-edge.mozilla.org/projects/nss/raw-file/${tag}/${file}"
+                      "https://raw.githubusercontent.com/nss-dev/nss/refs/tags/${tag}/${file}"
+                    ];
+                  hash = "sha256-PsK00kDcEsdH6vRQBh24SvdXxIO72jAvninOtdcL5RA=";
+                };
+              }
+            else
+              builtins.warn "Outdated cacert override present but not used" { }
+          );
+      })
+    ];
   };
 }
