@@ -31,6 +31,17 @@
 
           templates = {
             log = "log_oneline";
+            file_annotate = ''
+              join(" ",
+                commit.change_id().shortest(8),
+                truncate_end(5, commit_timestamp(commit).local().ago()),
+                truncate_end(32, pad_end(32, join(" ",
+                  commit.author().name(),
+                  commit.description().first_line()
+                ))),
+                pad_start(4, line_number),
+              ) ++ ": " ++ content
+            '';
           };
 
           template-aliases = {
@@ -69,6 +80,8 @@
                 )
               )
             '';
+            "format_short_signature_oneline(signature)" =
+              "coalesce(signature.name(), signature.email().local(), email_placeholder)";
           };
 
           user = lib.mkIf (user ? name && user ? email) {
